@@ -6,7 +6,8 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import { SideBar, ToolBar, ViewerContainer } from './components';
 import ApolloClientProvider from './apollo';
-
+import {Routes, Route} from 'react-router-dom';
+import BlocksCRUDOperations from "./components/Blocks-CRUD-Operations";
 const defaultTheme = createTheme();
 
 export default function App() {
@@ -36,7 +37,10 @@ export default function App() {
           >
             <Toolbar />
             <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
-              <ViewerContainer />
+                <Routes>
+                    <Route path='/viewer' element={<ViewerContainer/>}/>
+                    <Route  path='/blocks-CRUD' element={<BlocksCRUDOperations/>}/>
+                </Routes>
             </Container>
           </Box>
         </Box>
