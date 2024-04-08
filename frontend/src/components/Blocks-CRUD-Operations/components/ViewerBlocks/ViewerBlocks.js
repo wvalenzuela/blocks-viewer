@@ -19,7 +19,7 @@ class ViewerBlocks extends React.Component {
         const {holder} = props;
         if (holder) {
             holder.getInputs = () => {
-                if (Object.keys(this.state.inputs).length !== 3) return null;
+                if (Object.keys(this.state.inputs).length !== 1) return null;
                 return this.state.inputs;
             };
         }
@@ -57,8 +57,8 @@ class ViewerBlocks extends React.Component {
     render() {
         const {loading} = this.state;
         const disabled = Object.keys(this.state.inputs).length !== 4;
-        const inputports = [{value: '0', label: 'No Inputs'}, {value: '1', label: 'One Input'}, {value: '2', label: 'Two Inputs'}]
-        const outputports = [{value: '0', label: 'No Output'}, {value: '1', label: 'One Output'}, {value: '2', label: 'Two Outputs'}]
+        const inputports = [{value: 0, label: 'No Inputs'}, {value: 1, label: 'One Input'}, {value: 2, label: 'Two Inputs'}]
+        const outputports = [{value: 0, label: 'No Output'}, {value: 1, label: 'One Output'}, {value: 2, label: 'Two Outputs'}]
         return (
             <Grid
                 container
@@ -70,15 +70,15 @@ class ViewerBlocks extends React.Component {
             >
                 <Grid item>
                     <TextField
-                        name='name'
+                        name='blockName'
                         label='Block Name'
                         variant='standard'
+                        onChange={this.handleChange}
                     />
                 </Grid>
-                <Grid item>
-                    {/*Idea with dropdown menu display how many ports then select ther type*/}
+                {/**<Grid item>
                     <TextField
-                        name='name'
+                        name='inputs'
                         select
                         label='Input Ports'
                         variant='standard'
@@ -91,11 +91,10 @@ class ViewerBlocks extends React.Component {
                             ))
                         }
                     </TextField>
-                </Grid>
-                <Grid item>
-                    {/*Idea with dropdown menu display how many ports then select ther type*/}
+                </Grid>*/}
+                {/**<Grid item>
                     <TextField
-                        name='name'
+                        name='outputs'
                         select
                         label='Output Ports'
                         variant='standard'
@@ -109,7 +108,7 @@ class ViewerBlocks extends React.Component {
                             ))
                         }
                     </TextField>
-                </Grid>
+                </Grid>*/}
 
                 <Grid>
                     <LoadingButton

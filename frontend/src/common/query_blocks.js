@@ -14,7 +14,7 @@ const QUERY_BLOCKS = gql`
       }
       block {
         id
-        name
+        blockName
         createdAt
         updatedAt
       }
@@ -35,8 +35,8 @@ export const QueryBlocks = (name, page, limit) => {
 };
 
 const MUTATION_REGISTER_BLOCK = gql`
-  mutation ($inputs: RegisterUser!) {
-    register(inputs: $inputs) {
+  mutation ($inputs: RegisterBlock!) {
+    registerBlock (inputs: $inputs) {
       ok
       errors {
         path
@@ -44,7 +44,7 @@ const MUTATION_REGISTER_BLOCK = gql`
       }
       block {
         id
-        name
+        blockName
         createdAt
         updatedAt
       }

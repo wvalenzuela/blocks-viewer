@@ -3,13 +3,13 @@ import { gql } from 'graphql-tag';
 const TYPEDEFS = gql`
     type Block {
         id: LongLong!
-        name: String
+        blockName: String
         createdAt: String!
         updatedAt: String!
     }
     input InputBlock {
         id: LongLong
-        name: String
+        blockName: String
         createdAt: String
         updatedAt: String
     }
@@ -19,7 +19,7 @@ const TYPEDEFS = gql`
         errors: [Error!]
         total: LongLong
     }
-    type RegisterResponse {
+    type RegisterResponseBlock {
         ok: Boolean!
         block: Block
         errors: [Error!]
@@ -27,23 +27,23 @@ const TYPEDEFS = gql`
     # ---------------------------- QUERY ---------------------------
     type Query {
         allBlocks(
-            name: String
+            blockName: String
             page: Int
             limit: Int
         ): BlocksResponse! @auth
     }
     input RegisterBlock {
-        name: String
+        blockName: String!
     }
     input InputBlockDetails {
         id: LongLong
-        name: String
+        blockName: String
         inputs: Int
         outputs: Int
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        register(inputs: RegisterBlock!): RegisterResponse!
+        registerBlock (inputs: RegisterBlock!): RegisterResponseBlock!
     }
     `;
 export default TYPEDEFS;
