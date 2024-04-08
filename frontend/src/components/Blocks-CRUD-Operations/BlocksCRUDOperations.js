@@ -10,7 +10,7 @@ class BlocksCRUDOperations extends React.Component {
         this.state = {
             loading: false,
             error: '',
-            users: [],
+            blocks: [],
         };
         this.holder = { getInputs: null };
     }
@@ -38,7 +38,7 @@ class BlocksCRUDOperations extends React.Component {
         this.setState({ error: '' });
     };
     render() {
-        const { error, loading, users } = this.state;
+        const { error, loading, blocks } = this.state;
         let Component = (
             <Grid item>
                 <Box sx={{ display: 'flex' }}>
@@ -47,7 +47,7 @@ class BlocksCRUDOperations extends React.Component {
             </Grid>
         );
         if (!loading) {
-            Component = <Grid item xs={12}>{`Total users: ${users.length}`}</Grid>;
+            Component = <Grid item xs={12}>{`Total blocks: ${blocks.length}`}</Grid>;
         }
         return (
             <React.Fragment>
@@ -61,7 +61,7 @@ class BlocksCRUDOperations extends React.Component {
                     {Component}
                     <Grid item>
                         <TabelBlocks
-                            rows={loading ? [] : users}
+                            rows={loading ? [] : blocks}
                             handleReload={this.handleUsers}
                         />
                     </Grid>

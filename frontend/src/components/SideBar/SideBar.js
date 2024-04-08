@@ -71,7 +71,7 @@ const SideBar = ({open, toggleDrawer}) => {
                     <ListItemIcon>
                         <ViewInArIcon/>
                     </ListItemIcon>
-                    <ListItemText primary='Blocks CUD'/>
+                    <ListItemText primary='Blocks CRUD'/>
                 </ListItemButton>
             </List>
         </Drawer>

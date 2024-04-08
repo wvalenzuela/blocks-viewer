@@ -12,9 +12,11 @@ const QUERY_BLOCKS = gql`
         path
         message
       }
-      users {
+      block {
         id
         name
+        createdAt
+        updatedAt
       }
       total
     }
@@ -43,6 +45,8 @@ const MUTATION_REGISTER_BLOCK = gql`
       block {
         id
         name
+        createdAt
+        updatedAt
       }
     }
   }
