@@ -6,6 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import { SideBar, ToolBar, ViewerContainer } from './components';
 import ApolloClientProvider from './apollo';
+//import VtkComponent from './components/vtkComponent';
 
 const defaultTheme = createTheme();
 
