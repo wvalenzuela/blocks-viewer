@@ -9,7 +9,7 @@ const RESOLVER = {
             {models, block}
         ) => {
             try {
-                const block = await models.Block.findAll()
+                const blocks = await models.Block.findAll()
                 return {
                     ok: true,
                     blocks,
@@ -23,7 +23,7 @@ const RESOLVER = {
         },
     },
     Mutation: {
-        register: async (parant, { inputs }, { models, block}) => {
+        registerBlocks: async (parant, { inputs }, { models, user}) => {
             try {
                 if (IsInvalid(inputs)) {
                     throw Error('Invalid Input');
@@ -36,6 +36,7 @@ const RESOLVER = {
                     block,
                 };
             } catch (error) {
+                console.log(error)
                 return {
                     ok: false,
                     errors: FormatReplyErrors(error, models),

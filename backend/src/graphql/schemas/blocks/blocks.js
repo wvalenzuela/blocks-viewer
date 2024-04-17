@@ -43,7 +43,7 @@ const TYPEDEFS = gql`
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        registerBlock (inputs: RegisterBlock!): RegisterResponseBlock!
+        registerBlocks (inputs: RegisterBlock!): RegisterResponseBlock!
     }
     `;
 export default TYPEDEFS;
