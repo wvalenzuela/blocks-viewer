@@ -25,5 +25,6 @@ Go to frontend folder and run
 
 ```sh
  npm install
- npm start
+ npm start (MacOS)
+ npm run start-pc (Windows)
 ```

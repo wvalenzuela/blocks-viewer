@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const FormatReplyErrors = (e, models, name_variable) => {
   if (e && typeof e === 'string' && e.constructor === String) {
     return [{ path: 'unknown', message: e }];

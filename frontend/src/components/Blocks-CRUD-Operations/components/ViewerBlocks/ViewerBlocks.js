@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Grid, TextField} from '@mui/material';
+import {Grid, TextField, MenuItem} from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {
     GetData,
-    MutationRegisterUser,
+    MutationRegisterBlock,
     ServerErrorsString,
 } from '../../../../common';
 
-class ViewerUsers extends React.Component {
+class ViewerBlocks extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +19,7 @@ class ViewerUsers extends React.Component {
         const {holder} = props;
         if (holder) {
             holder.getInputs = () => {
-                if (Object.keys(this.state.inputs).length !== 4) return null;
+                if (Object.keys(this.state.inputs).length !== 1) return null;
                 return this.state.inputs;
             };
         }
@@ -38,11 +38,11 @@ class ViewerUsers extends React.Component {
         if (loading) return;
         this.setState({loading: true});
         (async () => {
-            MutationRegisterUser(inputs)
+            MutationRegisterBlock(inputs)
                 .then((res) => {
                     const data = GetData(res);
-                    const {ok, user, errors} = data.register;
-                    if (ok) this.setState({loading: false, user, inputs: {}});
+                    const {ok, blocks, errors} = data.register;
+                    if (ok) this.setState({loading: false, blocks, inputs: {}});
                     else throw errors;
                 })
                 .catch((error) => {
@@ -57,6 +57,8 @@ class ViewerUsers extends React.Component {
     render() {
         const {loading} = this.state;
         const disabled = Object.keys(this.state.inputs).length !== 4;
+        const inputports = [{value: 0, label: 'No Inputs'}, {value: 1, label: 'One Input'}, {value: 2, label: 'Two Inputs'}]
+        const outputports = [{value: 0, label: 'No Output'}, {value: 1, label: 'One Output'}, {value: 2, label: 'Two Outputs'}]
         return (
             <Grid
                 container
@@ -64,45 +66,52 @@ class ViewerUsers extends React.Component {
                 direction='row'
                 justifyContent='center'
                 alignItems='center'
+                sx={{'& .MuiTextField-root': {m: 1, width: '15ch'}}}
             >
                 <Grid item>
                     <TextField
-                        name='firstName'
-                        label='Firstname'
+                        name='blockName'
+                        label='Block Name'
                         variant='standard'
                         onChange={this.handleChange}
                     />
                 </Grid>
-                <Grid item>
+                {/**<Grid item>
                     <TextField
-                        name='lastName'
-                        label='LastName'
+                        name='inputs'
+                        select
+                        label='Input Ports'
                         variant='standard'
-                        onChange={this.handleChange}
-                    />
-                </Grid>
-                <Grid item>
+                        onChange={this.handleChange}>
+                        {
+                            inputports.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))
+                        }
+                    </TextField>
+                </Grid>*/}
+                {/**<Grid item>
                     <TextField
-                        name='email'
-                        label='E-mail'
-                        type='email'
+                        name='outputs'
+                        select
+                        label='Output Ports'
                         variant='standard'
                         onChange={this.handleChange}
-                    />
-                </Grid>
-                <Grid item>
-                    <TextField
-                        name='password'
-                        label='Password'
-                        type='password'
-                        autoComplete='current-password'
-                        variant='standard'
-                        onChange={this.handleChange}
-                    />
-                </Grid>
+                    >
+                        {
+                            outputports.map((option) => (
+                                <MenuItem key={option.value} value={option.value}>
+                                    {option.label}
+                                </MenuItem>
+                            ))
+                        }
+                    </TextField>
+                </Grid>*/}
+
                 <Grid>
                     <LoadingButton
-                        disabled={disabled}
                         size='small'
                         onClick={this.handleRegister}
                         endIcon={<SaveIcon/>}
@@ -110,7 +119,7 @@ class ViewerUsers extends React.Component {
                         loadingPosition='end'
                         variant='contained'
                     >
-                        Register
+                        RegisterBlocks
                     </LoadingButton>
                 </Grid>
             </Grid>
@@ -118,8 +127,8 @@ class ViewerUsers extends React.Component {
     }
 }
 
-ViewerUsers.propTypes = {
+ViewerBlocks.propTypes = {
     classes: PropTypes.object,
 };
 
-export default ViewerUsers;
+export default ViewerBlocks;

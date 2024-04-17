@@ -5,10 +5,10 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    name: DataTypes.STRING,
+    blockName: DataTypes.STRING,
     idDiagramm: {
       type: DataTypes.BIGINT,
-      allowNull: false,
+      allowNull: true,
     },
   });
   Block.associate = (models) => {
