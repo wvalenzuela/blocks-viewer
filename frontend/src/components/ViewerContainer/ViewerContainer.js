@@ -4,6 +4,8 @@ import { GetData, QueryUsers, ServerErrorsString } from '../../common';
 import SnackMessage from '../SnackMessage';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import { TableUsers, ViewerUsers } from './components';
+import VtkComponent from './components/VtkComponent/vtkComponent';
+
 class ViewerContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -51,7 +53,10 @@ class ViewerContainer extends React.Component {
     }
     return (
       <React.Fragment>
-        <Grid container spacing={1}>
+        <Box sx={{ display: 'flex', width: 800, height: 400 }}>
+          <VtkComponent />
+        </Box>
+        {/*<Grid container spacing={1}>
           <Grid item>
             <ViewerUsers
               holder={this.holder}
@@ -65,7 +70,7 @@ class ViewerContainer extends React.Component {
               handleReload={this.handleUsers}
             />
           </Grid>
-        </Grid>
+        </Grid> */}
         <SnackMessage
           handleClose={this.handleCloseSnak}
           message_text={error !== '' ? error : 'Unknown warning'}
