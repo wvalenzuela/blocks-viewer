@@ -14,10 +14,10 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.ENUM('in', 'out'),
       allowNull: false,
     },
-    idLine: {
+/**    idLine: {
       type: DataTypes.BIGINT,
       allowNull: false,
-    },
+    }, */
   });
   BlockPort.associate = (models) => {
     //
@@ -25,10 +25,10 @@ export default (sequelize, DataTypes) => {
       as: 'block',
       foreignKey: 'idBlock',
     });
-    BlockPort.belongsTo(models.BlockLine, {
+/**    BlockPort.belongsTo(models.BlockLine, {
       as: 'block_line',
       foreignKey: 'idLine',
-    });
+    }); */
   };
   return BlockPort;
 };

@@ -38,8 +38,7 @@ const TYPEDEFS = gql`
     input InputBlockDetails {
         id: LongLong
         blockName: String
-        inputs: Int
-        outputs: Int
+        idDiagramm: LongLong
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {
