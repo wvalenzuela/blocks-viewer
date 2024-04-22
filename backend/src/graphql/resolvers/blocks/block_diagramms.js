@@ -8,11 +8,10 @@ const RESOLVER = {
             {models, user}
         ) =>{
             try {
-                const diagramm = await models.BlockDiagramm.findAll()
-                console.log(diagramm)
+                const blockDiagramms = await models.BlockDiagramm.findAll()
                 return {
                     ok: true,
-                    diagramm,
+                    blockDiagramms,
                 };
             } catch (error) {
                 return {
@@ -29,11 +28,11 @@ const RESOLVER = {
                     throw Error('Invalid Input');
                 }
                 console.log({inputs});
-                const diagramm = await models.BlockDiagramm.create({...inputs}, {raw: true});
-                console.log({ diagramm});
+                const blockDiagramms = await models.BlockDiagramm.create({...inputs}, {raw: true});
+                console.log({ blockDiagramms});
                 return{
                     ok: true,
-                    diagramm,
+                    blockDiagramms,
                 };
             } catch (error) {
                 console.log(error)

@@ -18,7 +18,7 @@ const TYPEDEFS = gql`
     }
     type BlockDiagrammResponse {
         ok: Boolean!
-        Diagramms: [BlockDiagramm!]
+        blockDiagramms: [BlockDiagramm!]
         errors: [Error!]
         total: LongLong
     }
