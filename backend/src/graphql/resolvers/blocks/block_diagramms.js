@@ -1,18 +1,18 @@
 import { FormatReplyErrors, IsInvalid } from 'utils';
 
-
 const RESOLVER = {
     Query: {
-        allBlocks: async (
+        allBlockDiagramms: async (
             parent,
             {name, page, limit},
             {models, user}
-        ) => {
+        ) =>{
             try {
-                const blocks = await models.Block.findAll()
+                const diagramm = await models.BlockDiagramm.findAll()
+                console.log(diagramm)
                 return {
                     ok: true,
-                    blocks,
+                    diagramm,
                 };
             } catch (error) {
                 return {
@@ -23,17 +23,17 @@ const RESOLVER = {
         },
     },
     Mutation: {
-        registerBlocks: async (parant, { inputs }, { models, user}) => {
+        registerBlockDiagramms: async (parant, { inputs }, { models, user}) => {
             try {
                 if (IsInvalid(inputs)) {
                     throw Error('Invalid Input');
                 }
                 console.log({inputs});
-                const block = await models.Block.create({...inputs}, {raw: true});
-                console.log({ block});
+                const diagramm = await models.BlockDiagramm.create({...inputs}, {raw: true});
+                console.log({ diagramm});
                 return{
                     ok: true,
-                    block,
+                    diagramm,
                 };
             } catch (error) {
                 console.log(error)
@@ -44,6 +44,6 @@ const RESOLVER = {
             }
         }
     }
-};
+}
 
 export default RESOLVER;

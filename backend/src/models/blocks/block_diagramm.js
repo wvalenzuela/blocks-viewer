@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.BIGINT,
     },
     name: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.STRING,
     },
   });
   BlockDiagramm.associate = (models) => {

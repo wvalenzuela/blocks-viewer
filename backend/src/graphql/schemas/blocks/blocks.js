@@ -27,7 +27,7 @@ const TYPEDEFS = gql`
     # ---------------------------- QUERY ---------------------------
     type Query {
         allBlocks(
-            blockName: String
+            name: String
             page: Int
             limit: Int
         ): BlocksResponse! @auth
