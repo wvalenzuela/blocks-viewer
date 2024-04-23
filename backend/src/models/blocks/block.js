@@ -6,17 +6,17 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
     },
     blockName: DataTypes.STRING,
-    idDiagramm: {
+    /**idDiagramm: {
       type: DataTypes.BIGINT,
       allowNull: true,
-    },
+    },*/
   });
   Block.associate = (models) => {
     //N:M
-    Block.belongsTo(models.BlockDiagramm, {
+    /**Block.belongsTo(models.BlockDiagramm, {
       as: 'block_diagramm',
       foreignKey: 'idDiagramm',
-    });
+    });*/
   };
   return Block;
 };

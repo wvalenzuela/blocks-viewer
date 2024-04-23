@@ -5,6 +5,9 @@ import blockLineModel from './blocks/block_line';
 import blockDiagrammModel from './blocks/block_diagramm';
 import userDiagrammModel from './blocks/user_diagram';
 import userModel from './user/user';
+import diagrammRelationBlock from "./blocks/diagramm_relation_block";
+import diagrammRelationLine from "./blocks/diagramm_relation_line";
+import portRelationLine from "./blocks/port_relation_line";
 
 import { db } from 'config';
 var MySql = require('sync-mysql');
@@ -50,6 +53,9 @@ const models = {
   BlockLine: blockLineModel(sequelize, DataTypes),
   BlockDiagramm: blockDiagrammModel(sequelize, DataTypes),
   UserDiagramm: userDiagrammModel(sequelize, DataTypes),
+  DiagrammRelationBlock: diagrammRelationBlock(sequelize, DataTypes),
+  DiagrammRelationLine: diagrammRelationLine(sequelize, DataTypes),
+  PortRelationLine: portRelationLine(sequelize, DataTypes),
 };
 
 Object.keys(models).forEach((modelName) => {

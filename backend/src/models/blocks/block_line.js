@@ -6,25 +6,25 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
     },
     name: DataTypes.STRING,
-    idPortIn: {
+    /**idPortIn: {
       type: DataTypes.BIGINT,
       allowNull: false,
     },
     idPortOut: {
       type: DataTypes.BIGINT,
       allowNull: true,
-    },
+    },*/
   });
   BlockLine.associate = (models) => {
     //
-    BlockLine.belongsTo(models.BlockPort, {
+    /**BlockLine.belongsTo(models.BlockPort, {
       as: 'port_in',
       foreignKey: 'idPortIn',
     });
     BlockLine.belongsTo(models.BlockPort, {
       as: 'port_out',
       foreignKey: 'idPortOut',
-    });
+    });*/
   };
   return BlockLine;
 };
