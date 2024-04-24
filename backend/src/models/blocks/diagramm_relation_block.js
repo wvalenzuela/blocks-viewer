@@ -6,8 +6,8 @@ export default (sequelize, DataTypes) => {
             primaryKey: true,
         },
         name: DataTypes.STRING,
-        xBlock: DataTypes.DOUBLE,
-        yBlock: DataTypes.DOUBLE,
+        xBlock: DataTypes.FLOAT,
+        yBlock: DataTypes.FLOAT,
         idDiagramm: {
             type: DataTypes.BIGINT,
             allowNull: false,
