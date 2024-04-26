@@ -1,54 +1,58 @@
 import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
-    type BlockLine {
+    type DiagramLine {
         id: LongLong!
-        name: String!
-        idPortIn: LongLong!
+        idBlockOut: LongLong!
         idPortOut: LongLong!
+        idBlockIn: LongLong!     
+        idPortIn: LongLong!
         createdAt: String!
         updatedAt: String!
     }
-    input InputBlockLine {
+    input InputDiagramLine {
         id: LongLong!
-        name: String!
-        idPortIn: LongLong!
+        idBlockOut: LongLong!
         idPortOut: LongLong!
+        idBlockIn: LongLong!     
+        idPortIn: LongLong!
         createdAt: String!
         updatedAt: String!
     }
-    type BlockLineResponse {
+    type DiagramLineResponse {
         ok: Boolean!
-        blockLines: [BlockLine!]
+        diagramLines: [DiagramLine!]
         errors: [Error!]
         total: LongLong
     }
-    type RegisterResponseBlockLine {
+    type RegisterResponseDiagramLine {
         ok: Boolean!
-        blockLine: BlockLine
+        diagramLine: DiagramLine
         errors: [Error!]
     }
     # ---------------------------- QUERY ---------------------------
     type Query {
-        allBlockLines (
+        allDiagramLines (
             name: String
             page: Int
             limit: Int
-        ): BlockLineResponse! @auth
+        ): DiagramLineResponse! @auth
     }
-    input RegisterBlockLine {
-        name: String
-        idPortIn: LongLong!
+    input RegisterDiagramLine {
+        idBlockOut: LongLong!
         idPortOut: LongLong!
+        idBlockIn: LongLong!     
+        idPortIn: LongLong!
     }
-    input InputBlockLineDetails {
-        name: String!
-        idPortIn: LongLong!
+    input InputDiagramLineDetails {
+        idBlockOut: LongLong!
         idPortOut: LongLong!
+        idBlockIn: LongLong!     
+        idPortIn: LongLong!
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        registerBlockLines (inputs: RegisterBlockLine!): RegisterResponseBlockLine!
+        registerDiagramLines (inputs: RegisterDiagramLine!): RegisterResponseDiagramLine!
     }
     `;
 export default TYPEDEFS;
