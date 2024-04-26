@@ -22,7 +22,7 @@ const TYPEDEFS = gql`
     }
     type RegisterResponseDiagram {
         ok: Boolean!
-        diagram: BlockDiagram
+        diagram: Diagram
         errors: [Error!]
     }
     # ---------------------------- QUERY ---------------------------
@@ -42,7 +42,7 @@ const TYPEDEFS = gql`
     }    
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        registerDiagrams (inputs: RegisterDiagram!): RegisterResponseBlockDiagramm!
+        registerDiagrams (inputs: RegisterDiagram!): RegisterResponseDiagram!
     }
     `;
 

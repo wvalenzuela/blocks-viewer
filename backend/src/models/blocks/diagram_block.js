@@ -13,15 +13,13 @@ export default (sequelize, DataTypes) => {
             type: DataTypes.BIGINT,
             allowNull: false,
         },
-        coords: {
-            x: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-            y: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            }
+        xPos: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+        },
+        yPos: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
         }
     });
     DiagramBlock.associate = (models) => {

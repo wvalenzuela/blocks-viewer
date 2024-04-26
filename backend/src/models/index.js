@@ -6,6 +6,7 @@ import userDiagrammModel from './blocks/user_diagram';
 import userModel from './user/user';
 import diagramModel from './blocks/diagram';
 import blockPortModel from './blocks/block_port';
+import diagramBlockModel from './blocks/diagram_block';
 
 import { db } from 'config';
 var MySql = require('sync-mysql');
@@ -52,6 +53,7 @@ const models = {
   UserDiagramm: userDiagrammModel(sequelize, DataTypes),
   Diagram: diagramModel(sequelize, DataTypes),
   BlockPort: blockPortModel(sequelize, DataTypes),
+  DiagramBlock: diagramBlockModel(sequelize, DataTypes),
 };
 
 Object.keys(models).forEach((modelName) => {
