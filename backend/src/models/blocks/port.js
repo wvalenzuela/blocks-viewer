@@ -8,6 +8,7 @@ export default (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     color: {
       type: DataTypes.STRING,
+      allowNull: false,
     }
   });
   Port.associate = (models) => {

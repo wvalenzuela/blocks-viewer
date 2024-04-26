@@ -3,16 +3,16 @@ import { FormatReplyErrors, IsInvalid } from 'utils';
 
 const RESOLVER = {
     Query: {
-        allBlockPorts: async (
+        allPorts: async (
             parent,
             {name, page, limit},
             {models, user}
         ) => {
             try {
-                const blockPorts = await models.BlockPort.findAll()
+                const ports = await models.Port.findAll()
                 return {
                     ok: true,
-                    blockPorts,
+                    ports,
                 };
             } catch (error) {
                 return {
@@ -23,17 +23,17 @@ const RESOLVER = {
         },
     },
     Mutation: {
-        registerBlockPorts: async (parant, { inputs }, { models, user}) => {
+        registerPorts: async (parant, { inputs }, { models, user}) => {
             try {
                 if (IsInvalid(inputs)) {
                     throw Error('Invalid Input');
                 }
                 console.log({inputs});
-                const blockPort = await models.BlockPort.create({...inputs}, {raw: true});
-                console.log({ blockPort});
+                const port = await models.Port.create({...inputs}, {raw: true});
+                console.log({ port});
                 return{
                     ok: true,
-                    blockPort,
+                    port,
                 };
             } catch (error) {
                 console.log(error)

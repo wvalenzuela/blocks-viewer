@@ -1,54 +1,50 @@
 import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
-    type BlockPort {
+    type Port {
         id: LongLong!
         name: String!
-        idBlock: LongLong!
-        type: String!
+        color: String!
         createdAt: String!
         updatedAt: String!
     }
-    input InputBlockPort {
+    input InputPort {
         id: LongLong!
         name: String!
-        idBlock: LongLong!
-        type: String!
+        color: String
         createdAt: String!
         updatedAt: String!
     }
-    type BlockPortResponse {
+    type PortResponse {
         ok: Boolean!
-        blockPorts: [BlockPort!]
+        ports: [Port!]
         errors: [Error!]
         total: LongLong
     }
-    type RegisterResponseBlockPort {
+    type RegisterResponsePort {
         ok: Boolean!
-        blockPort: BlockPort
+        port: Port
         errors: [Error!]
     }
     # ---------------------------- QUERY ---------------------------
     type Query {
-        allBlockPorts (
+        allPorts (
             name: String
             page: Int
             limit: Int
-        ): BlockPortResponse! @auth
+        ): PortResponse! @auth
     }
-    input RegisterBlockPort {
+    input RegisterPort {
         name: String
-        idBlock: LongLong!
-        type: String!
+        color: String
     }
-    input InputBlockPortDetails {
+    input InputPortDetails {
         name: String!
-        idBlock: LongLong!
-        type: String!
+        color: String
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        registerBlockPorts (inputs: RegisterBlockPort!): RegisterResponseBlockPort!
+        registerPorts (inputs: RegisterPort!): RegisterResponsePort!
     }
     `;
 export default TYPEDEFS;
