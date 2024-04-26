@@ -2,50 +2,47 @@ import { gql } from 'graphql-tag';
 
 
 const TYPEDEFS = gql`
-    type BlockDiagramm {
+    type Diagram {
         id: LongLong
         name: String!
-        idUser: LongLong!
         createdAt: String!
         updatedAt: String!
     }
-    input InputBlockDiagramm {
+    input InputDiagram {
         id: LongLong
         name: String
-        idUser: LongLong!
         createdAt: String
         updatedAt: String
     }
-    type BlockDiagrammResponse {
+    type DiagramResponse {
         ok: Boolean!
-        blockDiagramms: [BlockDiagramm!]
+        diagrams: [Diagram!]
         errors: [Error!]
         total: LongLong
     }
-    type RegisterResponseBlockDiagramm {
+    type RegisterResponseDiagram {
         ok: Boolean!
-        blockDiagramms: BlockDiagramm
+        diagram: BlockDiagram
         errors: [Error!]
     }
     # ---------------------------- QUERY ---------------------------
     type Query {
-        allBlockDiagramms(
+        allDiagrams(
             name: String
             page: Int
             limit: Int
-        ): BlockDiagrammResponse! @auth
+        ): DiagramResponse! @auth
     } 
-    input RegisterBlockDiagramm {
+    input RegisterDiagram {
         name: String!
     }
-    input InputBlockDiagrammDetails {
+    input InputDiagramDetails {
         id: LongLong
         name: String
-        userID: Int
     }    
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        registerBlockDiagramms (inputs: RegisterBlockDiagramm!): RegisterResponseBlockDiagramm!
+        registerDiagrams (inputs: RegisterDiagram!): RegisterResponseBlockDiagramm!
     }
     `;
 

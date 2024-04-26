@@ -8,9 +8,7 @@ export default (sequelize, DataTypes) => {
     /**idUser: {
       type: DataTypes.BIGINT,
     },*/
-    name: {
-      type: DataTypes.STRING,
-    },
+    name: DataTypes.STRING,
   });
   Diagram.associate = (models) => {
     //N:M
