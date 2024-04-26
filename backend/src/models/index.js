@@ -1,13 +1,11 @@
 import { Sequelize, DataTypes } from 'sequelize';
 import blockModel from './blocks/block';
-import blockPortModel from './blocks/block_port';
-import blockLineModel from './blocks/block_line';
-import blockDiagrammModel from './blocks/block_diagramm';
+import portModel from './blocks/port';
+import diagramLineModel from './blocks/diagram_line';
 import userDiagrammModel from './blocks/user_diagram';
 import userModel from './user/user';
-import diagrammRelationBlock from "./blocks/diagramm_relation_block";
-import diagrammRelationLine from "./blocks/diagramm_relation_line";
-import portRelationLine from "./blocks/port_relation_line";
+import diagramModel from './blocks/diagram';
+import blockPortModel from './blocks/block_port';
 
 import { db } from 'config';
 var MySql = require('sync-mysql');
@@ -49,13 +47,11 @@ const sequelize = InitDatabase();
 const models = {
   User: userModel(sequelize, DataTypes),
   Block: blockModel(sequelize, DataTypes),
-  BlockPort: blockPortModel(sequelize, DataTypes),
-  BlockLine: blockLineModel(sequelize, DataTypes),
-  BlockDiagramm: blockDiagrammModel(sequelize, DataTypes),
+  Port: portModel(sequelize, DataTypes),
+  DiagramLine: diagramLineModel(sequelize, DataTypes),
   UserDiagramm: userDiagrammModel(sequelize, DataTypes),
-  DiagrammRelationBlock: diagrammRelationBlock(sequelize, DataTypes),
-  DiagrammRelationLine: diagrammRelationLine(sequelize, DataTypes),
-  PortRelationLine: portRelationLine(sequelize, DataTypes),
+  Diagram: diagramModel(sequelize, DataTypes),
+  BlockPort: blockPortModel(sequelize, DataTypes),
 };
 
 Object.keys(models).forEach((modelName) => {
