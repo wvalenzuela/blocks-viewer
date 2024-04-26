@@ -3,13 +3,15 @@ import { gql } from 'graphql-tag';
 const TYPEDEFS = gql`
     type Block {
         id: LongLong!
-        blockName: String
+        name: String!
+        color: String!
         createdAt: String!
         updatedAt: String!
     }
     input InputBlock {
         id: LongLong
-        blockName: String
+        name: String
+        color: String
         createdAt: String
         updatedAt: String
     }
@@ -33,12 +35,13 @@ const TYPEDEFS = gql`
         ): BlocksResponse! @auth
     }
     input RegisterBlock {
-        blockName: String!
+        name: String!
+        color: String!
     }
     input InputBlockDetails {
         id: LongLong
-        blockName: String
-        idDiagramm: LongLong
+        name: String
+        color: String
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {
