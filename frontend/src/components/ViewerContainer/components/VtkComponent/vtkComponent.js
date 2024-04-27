@@ -1,8 +1,7 @@
 
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 
 import '@kitware/vtk.js/Rendering/Profiles/Geometry';
-
 import vtkOpenGLRenderWindow from '@kitware/vtk.js/Rendering/OpenGL/RenderWindow';
 import vtkRenderWindow from '@kitware/vtk.js/Rendering/Core/RenderWindow';
 import vtkRenderer from '@kitware/vtk.js/Rendering/Core/Renderer';
@@ -16,10 +15,16 @@ function VtkComponent() {
 	const vtkContainerRef = useRef(null);
 	const context = useRef(null);
 	const flexContainer = useRef(null);
-
+	const rendererRef = useRef(null);
 	// This is an example of how you can use states
 	// See the code commented below
 	// const [coneResolution, setConeResolution] = useState(6);
+
+	const handleButton = () => {
+		rendererRef.current.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
+		return;
+	}
+
 
 	useEffect(() => {
 		if (context.current) return;
@@ -38,10 +43,10 @@ function VtkComponent() {
 		openGlRenderWindow.setContainer(container);
 
 		//create a new diagram and create a block
-		const diagram = new Diagram("new diagram", renderer);
-		diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
+		const diagram = new Diagram(renderer,"new diagram");
+		rendererRef.current = diagram;
+		//diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
 		diagram.createBlock(5, 0, ["integer", "boolean"], ["integer", "double","string"], [0.8,1.0,0.0])
-
 		
 		//interactor Class to set up interactor and manipulators
 		const interactor = new Interactor(openGlRenderWindow, container, renderer, diagram);
@@ -79,13 +84,14 @@ function VtkComponent() {
 
 	} , [vtkContainerRef]);
 
-
 	return (
 		<div style={{flex: '1 0 auto', border: '1px black solid'}} ref={flexContainer}>
 			<div ref={vtkContainerRef} style={{width: "100%", height: '100%'}} />
+			<button onClick={handleButton}>NEW BLOCK</button>
 		</div>
 	); 
-
 }
+
+
 
 export default VtkComponent;

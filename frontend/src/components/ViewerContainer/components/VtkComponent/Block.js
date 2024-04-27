@@ -7,7 +7,8 @@ import Port from './Port';
 
 
 class Block {
-    constructor(renderer, x, y, inputs, outputs, color) {
+    constructor(renderer, x, y, inputs, outputs, color, diagram) {
+        this.diagram = diagram;
         this.ports = [];
         this.color = color;
         this.x = x;
@@ -28,7 +29,7 @@ class Block {
         this.planeActor.getProperty().setColor(...color);
         this.planeMapper.setInputConnection(this.plane.getOutputData);
         this.renderer.addActor(this.planeActor);
-
+        this.diagram.relation.set(this.planeActor, this);
         this.createPorts(inputs, outputs);
     }
 

@@ -41,8 +41,9 @@ class ViewerBlocks extends React.Component {
             MutationRegisterBlock(inputs)
                 .then((res) => {
                     const data = GetData(res);
-                    const {ok, blocks, errors} = data.register;
-                    if (ok) this.setState({loading: false, blocks, inputs: {}});
+                    console.log(data)
+                    const {ok, block, errors} = data.registerBlocks;
+                    if (ok) this.setState({loading: false, block, inputs: {}});
                     else throw errors;
                 })
                 .catch((error) => {

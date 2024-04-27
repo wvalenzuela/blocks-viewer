@@ -12,6 +12,7 @@ class Line {
         this.lineMapper.setInputConnection(this.lineSource.getOutputPort());
         this.lineActor = vtkActor.newInstance();
         this.lineActor.getProperty().setColor(0.0,0.0,0.0);
+        this.lineActor.setPickable(false);
         this.lineActor.setMapper(this.lineMapper);
     }
     drawLine(start, end) {

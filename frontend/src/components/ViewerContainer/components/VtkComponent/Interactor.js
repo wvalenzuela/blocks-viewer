@@ -7,6 +7,7 @@ import { throttle } from '@kitware/vtk.js/macros';
 import { FieldAssociations } from '@kitware/vtk.js/Common/DataModel/DataSet/Constants';
 import vtkPicker from '@kitware/vtk.js/Rendering/Core/Picker';
 import Line from './Line';
+import PolyLine from './PolyLine';
 
 
 const WHITE = [1, 1, 1];
@@ -63,7 +64,7 @@ class Interactor {
 
     }
     createLine(output) {
-        this.currentLine = new Line(this.renderer, this.output);
+        this.currentLine = new PolyLine(this.renderer, output);
         return this.currentLine;
     }
     destroyLine(line) {
@@ -91,14 +92,16 @@ class Interactor {
             this.currentLine.drawLine(this.lastProcessedActor.getPosition(), worldCoords);
             this.renderer.getRenderWindow().render()
             return;
-        } else {
+        } else if (this.dragging == 'neutral') {
+            return;
+        } else { 
             this.hardwareSelector.getSourceDataAsync(this.renderer,x,y,x,y).then((result) => {
                 if (result) {
                     this.processSelections(result.generateSelection(x,y,x,y), x,y);
                 } else {
                     this.processSelections(null);
                 }
-            });        
+            });      
         }
     }
 
@@ -139,17 +142,18 @@ class Interactor {
             this.enablePan();
         }
         //logic: if currentline -> use hardwareSelector to check if theres a port, if not, destroy line else connect
-      //  if (this.currentLine && this.diagram.actors.get(this.lastProcessedActor) == 'port') {
-        if (false) {
-            if (this.lastProcessedActor == this.currentLine.lineActor) {
-                this.destroyLine(this.currentLine);
-                return;
-            } else {
-                this.currentLine.drawLine(this.currentLine.output.getPosition(), this.lastProcessedActor.getPosition());
-                return;
-            }
-        } else if (this.currentLine) {
-            this.destroyLine(this.currentLine);
+        //if (this.currentLine && this.diagram.actors.get(this.lastProcessedActor) == 'port') {
+        if (this.currentLine) {
+            const x = event.position.x;
+            const y = event.position.y;
+            const selection = this.hardwareSelector.getSourceDataAsync(this.renderer,x,y,x,y).then((result) => {
+                const r = result.generateSelection(x,y,x,y);
+                if (r[0]) {
+                    this.handleConnect(r[0].getProperties().prop);
+                } else {
+                    this.destroyLine(this.currentLine);
+                }
+            });
         }
     }
     
@@ -175,13 +179,30 @@ class Interactor {
         //set lastProcessedActor
         this.lastProcessedActor = prop;
         //paint the selected actor green
-        if (this.lastPaintedActor != prop) {
+        if (this.lastPaintedActor !== prop) {
             this.lastPaintedActorColor = prop.getProperty().getColor();
         }
         prop.getProperty().setColor(...GREEN);
         this.lastPaintedActor = prop;
         this.renderer.getRenderWindow().render()
 
+    }
+
+    handleConnect(prop){
+        if (this.diagram.actors.get(prop) === 'port') {
+            if (this.diagram.relation.get(prop).type === this.diagram.relation.get(this.lastProcessedActor).type || this.diagram.relation.get(prop).block === this.diagram.relation.get(this.lastProcessedActor).block) {
+                this.destroyLine(this.currentLine);
+                return;
+            } else {
+                //handle connection
+                this.currentLine.drawLine(this.lastProcessedActor.getPosition(), prop.getPosition());
+                this.renderer.getRenderWindow().render()
+                return
+            }
+        } else {
+            this.destroyLine(this.currentLine);
+            return;
+        }
     }
 
     //enables panning of the canvas, adds the manipulators for panning

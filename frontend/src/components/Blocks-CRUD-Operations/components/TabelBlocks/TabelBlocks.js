@@ -61,7 +61,7 @@ const headCells = [
         label: 'ID',
     },
     {
-        id: 'name',
+        id: 'blockName',
         disablePadding: true,
         label: 'BlockName',
     },
@@ -293,7 +293,7 @@ export default function EnhancedTable({ rows }) {
                                         >
                                             {row.id}
                                         </TableCell>
-                                        <TableCell>{row.firstName}</TableCell>
+                                        <TableCell>{row.blockName}</TableCell>
                                         <TableCell align='right'>{row.lastName}</TableCell>
                                         <TableCell align='right'>{row.email}</TableCell>
                                     </TableRow>

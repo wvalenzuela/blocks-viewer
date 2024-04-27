@@ -5,14 +5,14 @@ import { HTTP_ADDRESS_GRAPHQL } from '../config';
 
 /* -------------- USER LOGS ------------------ */
 const QUERY_BLOCKS = gql`
-  query ($name: String, $page: Int, $limit: Int) {
-    allBlocks(name: $name, page: $page, limit: $limit) {
+  query ($blockName: String, $page: Int, $limit: Int) {
+    allBlocks(blockName: $blockName, page: $page, limit: $limit) {
       ok
       errors {
         path
         message
       }
-      block {
+      blocks {
         id
         blockName
         createdAt
@@ -36,7 +36,7 @@ export const QueryBlocks = (name, page, limit) => {
 
 const MUTATION_REGISTER_BLOCK = gql`
   mutation ($inputs: RegisterBlock!) {
-    registerBlock (inputs: $inputs) {
+    registerBlocks (inputs: $inputs) {
       ok
       errors {
         path

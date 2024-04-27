@@ -4,6 +4,7 @@ import { GetData, QueryBlocks, ServerErrorsString } from '../../common';
 import SnackMessage from '../SnackMessage';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import { TabelBlocks, ViewerBlocks } from './components';
+
 class BlocksCRUDOperations extends React.Component {
     constructor(props) {
         super(props);
@@ -22,11 +23,12 @@ class BlocksCRUDOperations extends React.Component {
         if (loading) return;
         this.setState({ loading: true });
         (async () => {
-            QueryBlocks()
+            QueryBlocks(null,null,null)
                 .then((res) => {
                     const data = GetData(res);
-                    const { ok, users, errors } = data.allBlocks;
-                    if (ok) this.setState({ loading: false, users });
+                    const { ok, blocks, errors } = data.allBlocks;
+                    console.log(data.allBlocks)
+                    if (ok) this.setState({ loading: false, blocks });
                     else throw errors;
                 })
                 .catch((error) => {

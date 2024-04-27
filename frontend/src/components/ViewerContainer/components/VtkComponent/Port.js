@@ -24,6 +24,7 @@ class Port {
         
         this.block.renderer.addActor(this.circleActor);
         this.block.ports.push(this.circleActor);
+        this.block.diagram.relation.set(this.circleActor, this);
     }
 }
 export default Port;
