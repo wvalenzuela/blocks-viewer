@@ -1,51 +1,52 @@
 import { gql } from 'graphql-tag';
 
+
 const TYPEDEFS = gql`
-    type Block {
-        id: LongLong!
+    type Diagram {
+        id: LongLong
         name: String!
-        color: String!
         createdAt: String!
         updatedAt: String!
     }
-    input InputBlock {
+    input InputDiagram {
         id: LongLong
         name: String
-        color: String
         createdAt: String
         updatedAt: String
     }
-    type BlocksResponse {
+    type DiagramResponse {
         ok: Boolean!
-        blocks: [Block!]
+        diagrams: [Diagram!]
         errors: [Error!]
         total: LongLong
     }
-    type RegisterResponseBlock {
+    type RegisterResponseDiagram {
         ok: Boolean!
-        block: Block
+        diagram: Diagram
         errors: [Error!]
     }
     # ---------------------------- QUERY ---------------------------
     type Query {
-        allBlocks(
+        allDiagrams(
             name: String
             page: Int
             limit: Int
-        ): BlocksResponse! @auth
-    }
-    input RegisterBlock {
+        ): DiagramResponse! @auth
+    } 
+    input RegisterDiagram {
         name: String!
-        color: String!
     }
-    input InputBlockDetails {
+    input InputDiagramDetails {
         id: LongLong
         name: String
-        color: String
-    }
+    }    
     # ------------------------- MUTATION ---------------------------
     type Mutation {
-        registerBlocks (inputs: RegisterBlock!): RegisterResponseBlock!
+        registerDiagrams (inputs: RegisterDiagram!): RegisterResponseDiagram!
     }
     `;
+
+
+
+
 export default TYPEDEFS;

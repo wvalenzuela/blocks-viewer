@@ -1,5 +1,5 @@
 export default (sequelize, DataTypes) => {
-  const Block = sequelize.define('block', {
+  const Port = sequelize.define('port', {
     id: {
       type: DataTypes.BIGINT,
       autoIncrement: true,
@@ -8,12 +8,11 @@ export default (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     color: {
       type: DataTypes.STRING,
+      allowNull: false,
     }
-
   });
-  Block.associate = (models) => {
-    //N:M
-
+  Port.associate = (models) => {
+    //
   };
-  return Block;
+  return Port;
 };

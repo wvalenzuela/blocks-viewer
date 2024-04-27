@@ -3,38 +3,42 @@ import { FormatReplyErrors, IsInvalid } from 'utils';
 
 const RESOLVER = {
     Query: {
-        allBlocks: async (
+        allDiagramBlocks: async (
             parent,
             {name, page, limit},
-            {models, user}
-        ) => {
+            {models, user},
+        ) =>{
             try {
-                const blocks = await models.Block.findAll()
+                const diagramBlocks = await models.DiagramBlock.findAll()
                 return {
                     ok: true,
-                    blocks,
-                };
+                    diagramBlocks,
+                }
             } catch (error) {
                 return {
                     ok: false,
                     errors: FormatReplyErrors(error, models),
-                };
+                }
             }
-        },
+        }
     },
     Mutation: {
-        registerBlocks: async (parant, { inputs }, { models, user}) => {
+        registerDiagramBlocks: async (
+            parent,
+            { inputs },
+            { models, user }
+        ) => {
             try {
                 if (IsInvalid(inputs)) {
                     throw Error('Invalid Input');
                 }
-                console.log({inputs});
-                const block = await models.Block.create({...inputs}, {raw: true});
-                console.log({ block});
-                return{
+                console.log({inputs})
+                const diagramBlock = await models.DiagramBlock.create({...inputs}, {raw: true})
+                console.log(diagramBlock)
+                return {
                     ok: true,
-                    block,
-                };
+                    diagramBlock,
+                }
             } catch (error) {
                 console.log(error)
                 return {
@@ -43,7 +47,7 @@ const RESOLVER = {
                 }
             }
         }
-    }
-};
+    },
+}
 
-export default RESOLVER;
+export default RESOLVER

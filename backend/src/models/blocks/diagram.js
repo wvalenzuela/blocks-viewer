@@ -1,19 +1,17 @@
 export default (sequelize, DataTypes) => {
-  const Block = sequelize.define('block', {
+  const Diagram = sequelize.define('diagram', {
     id: {
       type: DataTypes.BIGINT,
       autoIncrement: true,
       primaryKey: true,
     },
+    /**idUser: {
+      type: DataTypes.BIGINT,
+    },*/
     name: DataTypes.STRING,
-    color: {
-      type: DataTypes.STRING,
-    }
-
   });
-  Block.associate = (models) => {
+  Diagram.associate = (models) => {
     //N:M
-
   };
-  return Block;
+  return Diagram;
 };
