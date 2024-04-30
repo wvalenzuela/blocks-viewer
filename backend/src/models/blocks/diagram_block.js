@@ -24,6 +24,7 @@ export default (sequelize, DataTypes) => {
     });
     DiagramBlock.associate = (models) => {
         //N:M
+        /*
         DiagramBlock.belongsTo(models.Diagram, {
             as: "diagram",
             foreignKey: 'idDiagram',
@@ -31,7 +32,11 @@ export default (sequelize, DataTypes) => {
         DiagramBlock.belongsTo(models.Block, {
             as: "block",
             foreignKey: 'idBlock',
-        })
+        })*/
+        //DiagramBlock.belongsToMany(models.Diagram, { through: models.DiagramLine, as: 'block', foreignKey: 'idBlockOut' });
+        //DiagramBlock.belongsToMany(models.Diagram, { through: models.DiagramLine, as: 'block', foreignKey: 'idBlockIn' });
+        DiagramBlock.belongsTo(models.Block, { as: 'block', foreignKey: 'idBlock'})
+        
     };
     return DiagramBlock;
 };

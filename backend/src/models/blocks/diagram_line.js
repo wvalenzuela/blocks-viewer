@@ -29,6 +29,7 @@ export default (sequelize, DataTypes) => {
   });
   DiagramLine.associate = (models) => {
     //
+    /*
     DiagramLine.belongsTo(models.Diagram, {
       as: 'diagram',
       foreignKey: 'idDiagram',
@@ -48,7 +49,9 @@ export default (sequelize, DataTypes) => {
     DiagramLine.belongsTo(models.Port, {
       as: 'portIn',
       foreignKey: 'idPortIn',
-    })
+    })*/
+    DiagramLine.belongsTo(models.DiagramBlock, { as: 'outputblock', foreignKey: 'idBlockOut'})
+    DiagramLine.belongsTo(models.DiagramBlock, { as: 'inputblock', foreignKey: 'idBlockIn'})
   };
   return DiagramLine;
 };

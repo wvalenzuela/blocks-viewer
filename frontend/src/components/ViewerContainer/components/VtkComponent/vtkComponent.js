@@ -1,97 +1,114 @@
+import { useRef, useEffect, useState, useCallback } from "react";
 
-import { useRef, useEffect, useState, useCallback } from 'react';
-
-import '@kitware/vtk.js/Rendering/Profiles/Geometry';
-import vtkOpenGLRenderWindow from '@kitware/vtk.js/Rendering/OpenGL/RenderWindow';
-import vtkRenderWindow from '@kitware/vtk.js/Rendering/Core/RenderWindow';
-import vtkRenderer from '@kitware/vtk.js/Rendering/Core/Renderer';
-import vtkPicker from '@kitware/vtk.js/Rendering/Core/Picker';
-import Block from './Block';
-import Diagram from './Diagram';
-import Interactor from './Interactor';
+import "@kitware/vtk.js/Rendering/Profiles/Geometry";
+import vtkOpenGLRenderWindow from "@kitware/vtk.js/Rendering/OpenGL/RenderWindow";
+import vtkRenderWindow from "@kitware/vtk.js/Rendering/Core/RenderWindow";
+import vtkRenderer from "@kitware/vtk.js/Rendering/Core/Renderer";
+import vtkPicker from "@kitware/vtk.js/Rendering/Core/Picker";
+import Block from "./Block";
+import Diagram from "./Diagram";
+import Interactor from "./Interactor";
+import Interface from "./Interface/Interface"
+import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import React from "react";
+import {
+  GetData,
+  QueryBlocks,
+  ServerErrorsString,
+  QueryDiagrams,
+} from "../../../../common";
 
 
 function VtkComponent() {
-	const vtkContainerRef = useRef(null);
-	const context = useRef(null);
-	const flexContainer = useRef(null);
-	const rendererRef = useRef(null);
-	// This is an example of how you can use states
-	// See the code commented below
-	// const [coneResolution, setConeResolution] = useState(6);
+  const vtkContainerRef = useRef(null);
+  const context = useRef(null);
+  const flexContainer = useRef(null);
+  const diagramRef = useRef(null);
+  // This is an example of how you can use states
+  // See the code commented below
+  // const [coneResolution, setConeResolution] = useState(6);
+  const addBlock = (block) => {
+	console.log(block);
+  } 
+  const loadDiagram = (diagramData) => {
+    diagramRef.current.buildDiagram(diagramData); 
+  }
 
-	const handleButton = () => {
-		rendererRef.current.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
-		return;
-	}
+  useEffect(() => {
+    if (context.current) return;
+    //replace with diagram class tbd
 
+    const renderWindow = vtkRenderWindow.newInstance();
+    const renderer = vtkRenderer.newInstance();
+    //background color light gray
+    renderer.setBackground(0.8, 0.8, 0.8);
+    renderWindow.addRenderer(renderer);
 
-	useEffect(() => {
-		if (context.current) return;
-		//replace with diagram class tbd
+    const openGlRenderWindow = vtkOpenGLRenderWindow.newInstance();
+    renderWindow.addView(openGlRenderWindow);
 
-		const renderWindow = vtkRenderWindow.newInstance();
-		const renderer = vtkRenderer.newInstance();
-		//background color light gray
-		renderer.setBackground(0.8,0.8,0.8);
-		renderWindow.addRenderer(renderer);
+    const container = vtkContainerRef.current;
+    openGlRenderWindow.setContainer(container);
 
-		const openGlRenderWindow = vtkOpenGLRenderWindow.newInstance();
-		renderWindow.addView(openGlRenderWindow);		
+    //create a new diagram and create a block
+    const diagram = new Diagram(renderer, "new diagram");
+    diagramRef.current = diagram;
+    //diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
+    diagram.createBlock(
+      5,
+      0,
+      ["integer", "boolean"],
+      ["integer", "double", "string"],
+      [0.8, 1.0, 0.0]
+    );
 
-		const container = vtkContainerRef.current;
-		openGlRenderWindow.setContainer(container);
+    //interactor Class to set up interactor and manipulators
+    const interactor = new Interactor(
+      openGlRenderWindow,
+      container,
+      renderer,
+      diagram
+    );
+    openGlRenderWindow.setSize(container.clientWidth, container.clientHeight);
 
-		//create a new diagram and create a block
-		const diagram = new Diagram(renderer,"new diagram");
-		rendererRef.current = diagram;
-		//diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
-		diagram.createBlock(5, 0, ["integer", "boolean"], ["integer", "double","string"], [0.8,1.0,0.0])
-		
-		//interactor Class to set up interactor and manipulators
-		const interactor = new Interactor(openGlRenderWindow, container, renderer, diagram);
-		openGlRenderWindow.setSize(container.clientWidth, container.clientHeight);
+    // window.addEventListener('resize', () => {
+    // 	const boundingRect = container.getBoundingClientRect();
+    // 	openGlRenderWindow.setSize(boundingRect.width, boundingRect.height);
+    // });
 
+    // const observer = new ResizeObserver((entries) => {
+    // 	console.log('ResizeObserver', entries);
+    // 	const boundingRect = container.getBoundingClientRect();
+    // 	openGlRenderWindow.setSize(boundingRect.width, boundingRect.height);
+    // });
+    // observer.observe(container);
 
-		// window.addEventListener('resize', () => {
-		// 	const boundingRect = container.getBoundingClientRect();
-		// 	openGlRenderWindow.setSize(boundingRect.width, boundingRect.height);
-		// });
+    const handleResize = () => {
+      openGlRenderWindow.setSize(window.innerWidth, window.innerHeight);
+    };
 
-		// const observer = new ResizeObserver((entries) => {
-		// 	console.log('ResizeObserver', entries);
-		// 	const boundingRect = container.getBoundingClientRect();
-		// 	openGlRenderWindow.setSize(boundingRect.width, boundingRect.height);
-		// });
-		// observer.observe(container);
- 
-	
-		const handleResize = () => {
-			openGlRenderWindow.setSize(window.innerWidth, window.innerHeight);
-        };
+    //tbd
+    //window.addEventListener('resize', handleResize);
 
-		//tbd
-    	//window.addEventListener('resize', handleResize);
+    renderer.resetCamera();
+    renderWindow.render();
 
-		renderer.resetCamera();
-		renderWindow.render();		
+    context.current = {
+      renderWindow,
+      renderer,
+      openGlRenderWindow,
+    };
+  }, [vtkContainerRef]);
 
-		context.current = {
-			renderWindow,
-			renderer,
-			openGlRenderWindow,
-		};
-
-	} , [vtkContainerRef]);
-
-	return (
-		<div style={{flex: '1 0 auto', border: '1px black solid'}} ref={flexContainer}>
-			<div ref={vtkContainerRef} style={{width: "100%", height: '100%'}} />
-			<button onClick={handleButton}>NEW BLOCK</button>
-		</div>
-	); 
+  return (
+    <div
+      style={{ flex: "1 0 auto", border: "1px black solid" }}
+      ref={flexContainer}
+    >
+      <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
+	  <Interface addBlock={addBlock} loadDiagram={loadDiagram}></Interface>
+    </div>
+  );
 }
-
-
 
 export default VtkComponent;

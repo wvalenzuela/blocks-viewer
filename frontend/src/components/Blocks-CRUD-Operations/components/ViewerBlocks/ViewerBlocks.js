@@ -35,6 +35,7 @@ class ViewerBlocks extends React.Component {
     };
     handleRegister = () => {
         const {loading, inputs} = this.state;
+        console.log(inputs);
         if (loading) return;
         this.setState({loading: true});
         (async () => {
@@ -43,8 +44,10 @@ class ViewerBlocks extends React.Component {
                     const data = GetData(res);
                     console.log(data)
                     const {ok, block, errors} = data.registerBlocks;
-                    if (ok) this.setState({loading: false, block, inputs: {}});
-                    else throw errors;
+                    if (ok) {
+                        this.setState({loading: false, block, inputs: {}});
+                        this.props.handleReload();
+                    } else throw errors;
                 })
                 .catch((error) => {
                     this.setState({
@@ -71,8 +74,14 @@ class ViewerBlocks extends React.Component {
             >
                 <Grid item>
                     <TextField
-                        name='blockName'
+                        name='name'
                         label='Block Name'
+                        variant='standard'
+                        onChange={this.handleChange}
+                    />
+                    <TextField
+                        name='color'
+                        label='Block Color'
                         variant='standard'
                         onChange={this.handleChange}
                     />

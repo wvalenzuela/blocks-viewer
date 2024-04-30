@@ -7,6 +7,7 @@ const TYPEDEFS = gql`
         color: String!
         createdAt: String!
         updatedAt: String!
+        port: [Port]
     }
     input InputBlock {
         id: LongLong
@@ -32,6 +33,14 @@ const TYPEDEFS = gql`
             name: String
             page: Int
             limit: Int
+        ): BlocksResponse! @auth
+    }
+    type Query {
+        fullBlock(
+            name: String
+            page: Int
+            limit: Int
+            id: Int!
         ): BlocksResponse! @auth
     }
     input RegisterBlock {

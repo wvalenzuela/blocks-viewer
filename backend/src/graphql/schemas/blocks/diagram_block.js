@@ -9,6 +9,7 @@ const TYPEDEFS = gql`
         yPos: Float
         createdAt: String!
         updatedAt: String!
+        block: Block
     }
     input InputDiagramBlock {
         id: LongLong!

@@ -20,6 +20,12 @@ const TYPEDEFS = gql`
         errors: [Error!]
         total: LongLong
     }
+    type DiagramBlockResponse {
+        ok: Boolean!
+        diagramBlocks: [DiagramBlock!]
+        errors: [Error!]
+        total: LongLong
+    }
     type RegisterResponseDiagram {
         ok: Boolean!
         diagram: Diagram
@@ -32,7 +38,15 @@ const TYPEDEFS = gql`
             page: Int
             limit: Int
         ): DiagramResponse! @auth
-    } 
+    }
+    type Query {
+        fullDiagram(
+            name: String
+            page: Int
+            limit: Int
+            id: Int!
+        ): DiagramBlockResponse! @auth
+    }
     input RegisterDiagram {
         name: String!
     }

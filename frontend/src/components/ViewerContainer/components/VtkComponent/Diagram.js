@@ -21,6 +21,9 @@ class Diagram{
         this.renderer.resetCamera();
         this.renderer.getRenderWindow().render();
     }
+    buildDiagram(diagramData) {
+        console.log(diagramData);
+    }
 }
 
 export default Diagram;

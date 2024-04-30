@@ -12,6 +12,8 @@ export default (sequelize, DataTypes) => {
   });
   Diagram.associate = (models) => {
     //N:M
+    Diagram.hasMany(models.DiagramBlock, {as: "diagramblocks", foreignKey: "diagramId"})
+    Diagram.hasMany(models.DiagramLine, {as: "diagramline", foreignKey: "diagramId"})
   };
   return Diagram;
 };

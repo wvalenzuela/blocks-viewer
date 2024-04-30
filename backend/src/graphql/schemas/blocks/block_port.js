@@ -21,19 +21,19 @@ const TYPEDEFS = gql`
     }
     type BlockPortResponse {
         ok: Boolean!
-        BlockPorts: [BlockPort!]
+        blockPorts: [BlockPort!]
         errors: [Error!]
         total: LongLong
     }
     type RegisterResponseBlockPort {
         ok: Boolean!
-        BlockPort: BlockPort
+        blockPort: BlockPort
         errors: [Error!]
     }
     # ---------------------------- QUERY ---------------------------
     type Query {
         allBlockPorts (
-            name: String!
+            name: String
             page: Int
             limit: Int
         ): BlockPortResponse! @auth

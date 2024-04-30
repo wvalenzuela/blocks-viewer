@@ -10,9 +10,12 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     }
 
+
   });
   Block.associate = (models) => {
-    //N:M
+    //N:M 
+    //Block.belongsToMany(models.Port, { through: models.BlockPort });
+    Block.belongsToMany(models.Port, { through: models.BlockPort, as: 'port', foreignKey: 'idBlock' });    
 
   };
   return Block;

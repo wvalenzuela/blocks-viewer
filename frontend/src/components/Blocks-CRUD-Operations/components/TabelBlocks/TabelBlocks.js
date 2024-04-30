@@ -61,7 +61,7 @@ const headCells = [
         label: 'ID',
     },
     {
-        id: 'blockName',
+        id: 'name',
         disablePadding: true,
         label: 'BlockName',
     },
@@ -172,7 +172,8 @@ function EnhancedTableToolbar(props) {
         </Toolbar>
     );
 }
-export default function EnhancedTable({ rows }) {
+export default function EnhancedTable(props) {
+    const {rows, handleReload} = props;
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
@@ -185,6 +186,8 @@ export default function EnhancedTable({ rows }) {
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
+
+
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -227,6 +230,7 @@ export default function EnhancedTable({ rows }) {
         setDense(event.target.checked);
     };
 
+
     const isSelected = (id) => selected.indexOf(id) !== -1;
 
     // Avoid a layout jump when reaching the last page with empty rows.
@@ -245,7 +249,7 @@ export default function EnhancedTable({ rows }) {
     return (
         <Box sx={{ width: '100%' }}>
             <Paper sx={{ width: '100%', mb: 2 }}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} handleReload={handleReload}/>
                 <TableContainer>
                     <Table
                         sx={{ minWidth: 750 }}
@@ -293,9 +297,7 @@ export default function EnhancedTable({ rows }) {
                                         >
                                             {row.id}
                                         </TableCell>
-                                        <TableCell>{row.blockName}</TableCell>
-                                        <TableCell align='right'>{row.lastName}</TableCell>
-                                        <TableCell align='right'>{row.email}</TableCell>
+                                        <TableCell>{row.name}</TableCell>
                                     </TableRow>
                                 );
                             })}

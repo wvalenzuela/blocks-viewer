@@ -19,18 +19,26 @@ export default (sequelize, DataTypes) => {
         position: {
             type: DataTypes.BIGINT,
             allowNull: false,
-        }
+        },  
+    }, {
+        indexes: [{
+            unique: false,
+            fields: ['idBlock', 'idPort']
+        }]
     });
     BlockPort.associate = (models) => {
         //
+        /*
         BlockPort.belongsTo(models.Block, {
             as: "block",
-            foreignKey: "id",
+            foreignKey: "idBlock",
         })
         BlockPort.belongsTo(models.Port, {
             as: "port",
             foreignKey: "idPort",
-        })
+        })  */
+        //BlockPort.belongsTo(models.Block, { foreignKey: 'idBlock' });
+        //BlockPort.belongsTo(models.Port, { foreignKey: 'idPort' });
     };
     return BlockPort;
 };

@@ -8,8 +8,35 @@ const RESOLVER = {
             {name, page, limit},
             {models, user}
         ) => {
-            try {
+            try {             
                 const blocks = await models.Block.findAll()
+                return {
+                    ok: true,
+                    blocks,
+                };
+            } catch (error) {
+                return {
+                    ok: false,
+                    errors: FormatReplyErrors(error, models),
+                };
+            }
+        },
+        fullBlock: async (
+            parent,
+            {name, page, limit, id},
+            {models, user}
+        ) => {
+            try {
+                const options = {
+                    where: {},
+                    include: {
+                        model: models.Port,
+                        as: 'port'
+                    } 
+                };
+                options.where.id = id;
+                
+                const blocks = await models.Block.findAll(options)
                 return {
                     ok: true,
                     blocks,
@@ -23,7 +50,7 @@ const RESOLVER = {
         },
     },
     Mutation: {
-        registerBlocks: async (parant, { inputs }, { models, user}) => {
+        registerBlocks: async (parent, { inputs }, { models, user}) => {
             try {
                 if (IsInvalid(inputs)) {
                     throw Error('Invalid Input');

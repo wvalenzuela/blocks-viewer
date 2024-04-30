@@ -20,6 +20,40 @@ const RESOLVER = {
                 };
             }
         },
+        fullDiagram: async (
+            parent,
+            {name, page, limit, id},
+            {models, user}
+        ) =>{
+            try {
+                const options = {
+                    where: {},
+                    include: {
+                        model: models.Block,
+                        as: 'block',
+                        include: {
+                            model: models.Port,
+                            as: 'port'
+                        }
+                    } 
+                };
+                options.where.idDiagram = id;
+                const diagramBlocks = await models.DiagramBlock.findAll(options)
+                console.log(diagramBlocks[0].dataValues.block);
+
+                
+            
+                return {
+                    ok: true,
+                    diagramBlocks,
+                };
+            } catch (error) {
+                return {
+                    ok: false,
+                    errors: FormatReplyErrors(error, models),
+                };
+            }
+        },
     },
     Mutation: {
         registerDiagrams: async (parant, { inputs }, { models, user}) => {
