@@ -2,10 +2,10 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type DiagramLine {
-        id: LongLong!
+        id: ID!
         idBlockOut: LongLong!
         idPortOut: LongLong!
-        idBlockIn: LongLong!     
+        idBlockIn: LongLong!    
         idPortIn: LongLong!
         createdAt: String!
         updatedAt: String!
@@ -36,15 +36,18 @@ const TYPEDEFS = gql`
             name: String
             page: Int
             limit: Int
+            idDiagram: Int!
         ): DiagramLineResponse! @auth
     }
     input RegisterDiagramLine {
+        idDiagram: LongLong!
         idBlockOut: LongLong!
         idPortOut: LongLong!
         idBlockIn: LongLong!     
         idPortIn: LongLong!
     }
     input InputDiagramLineDetails {
+        idDiagram: LongLong!
         idBlockOut: LongLong!
         idPortOut: LongLong!
         idBlockIn: LongLong!     
@@ -53,6 +56,19 @@ const TYPEDEFS = gql`
     # ------------------------- MUTATION ---------------------------
     type Mutation {
         registerDiagramLines (inputs: RegisterDiagramLine!): RegisterResponseDiagramLine!
+    }
+    type Mutation {
+        createDiagramLines (input: CreateDiagramLineInput!): [DiagramLine]
+    }
+    input CreateDiagramLineInput {
+        diagramId: ID!
+        lines: [CreateDiagramLineLinesInput]
+    }
+    input CreateDiagramLineLinesInput {
+        idBlockIn: ID!
+        idBlockOut: ID!
+        idPortIn: ID!
+        idPortOut: ID!
     }
     `;
 export default TYPEDEFS;

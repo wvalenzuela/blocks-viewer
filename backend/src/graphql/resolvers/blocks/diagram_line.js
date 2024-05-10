@@ -5,11 +5,15 @@ const RESOLVER = {
     Query: {
         allDiagramLines: async (
             parent,
-            {name, page, limit},
+            {name, page, limit, idDiagram},
             {models, user}
         ) => {
             try {
-                const diagramLines = await models.DiagramLine.findAll()
+                const options = {
+                    where: {},
+                };
+                options.where.idDiagram = idDiagram;
+                const diagramLines = await models.DiagramLine.findAll(options)
                 return {
                     ok: true,
                     diagramLines,
@@ -23,6 +27,34 @@ const RESOLVER = {
         },
     },
     Mutation: {
+        createDiagramLines: async (_, { input }, { models }) => {
+            try {
+              // Create the block
+              const { diagramId, lines } = input;   
+              // Add ports to the block
+              for (const { idBlockIn, idBlockOut, idPortIn, idPortOut } of lines) {
+                // Add the port to the block with the specified type
+                await models.DiagramLine.create({
+                  diagramId,
+                  idBlockIn,
+                  idBlockOut,
+                  idPortIn,
+                  idPortOut,
+                });
+              }
+      
+              // Fetch and return the created block
+              const createdDiagramLines = await models.DiagramLine.findAll({
+                where: { diagramId: diagramId },
+                //include: models.Port,
+              });
+              
+              return createdDiagramLines;
+            } catch (error) {
+              console.error('Error creating block with ports:', error);
+              throw new Error('Failed to create block with ports');
+            }
+          },
         registerDiagramLines: async (parant, { inputs }, { models, user}) => {
             try {
                 if (IsInvalid(inputs)) {

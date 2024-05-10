@@ -24,14 +24,21 @@ function VtkComponent() {
   const context = useRef(null);
   const flexContainer = useRef(null);
   const diagramRef = useRef(null);
+
   // This is an example of how you can use states
   // See the code commented below
   // const [coneResolution, setConeResolution] = useState(6);
   const addBlock = (block) => {
-	console.log(block);
+    diagramRef.current.createBlock(0,0,block.ports,block.color,block.id,null);
   } 
   const loadDiagram = (diagramData) => {
+    //diagramRef.current.renderer.removeAllActors();
+    //const temprenderer = diagramRef.current.renderer;
+    //diagramRef.current = new Diagram(temprenderer, diagramData.name)
     diagramRef.current.buildDiagram(diagramData); 
+  }
+  const saveDiagram = () => {
+    return diagramRef.current.saveDiagram();
   }
 
   useEffect(() => {
@@ -51,16 +58,16 @@ function VtkComponent() {
     openGlRenderWindow.setContainer(container);
 
     //create a new diagram and create a block
-    const diagram = new Diagram(renderer, "new diagram");
+    const diagram = new Diagram(renderer, "new diagram 4");
     diagramRef.current = diagram;
     //diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
-    diagram.createBlock(
+   /* diagram.createBlock(
       5,
       0,
       ["integer", "boolean"],
       ["integer", "double", "string"],
       [0.8, 1.0, 0.0]
-    );
+    ); */
 
     //interactor Class to set up interactor and manipulators
     const interactor = new Interactor(
@@ -101,13 +108,20 @@ function VtkComponent() {
   }, [vtkContainerRef]);
 
   return (
-    <div
-      style={{ flex: "1 0 auto", border: "1px black solid" }}
-      ref={flexContainer}
-    >
-      <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
-	  <Interface addBlock={addBlock} loadDiagram={loadDiagram}></Interface>
-    </div>
+      <div
+        style={{ flex: "1 0 auto", border: "1px black solid" }}
+        ref={flexContainer}
+      >
+        <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
+        <div>
+        <Interface
+        addBlock={addBlock}
+        loadDiagram={loadDiagram}
+        saveDiagram={saveDiagram}
+      ></Interface>
+        </div>
+      </div>
+      
   );
 }
 

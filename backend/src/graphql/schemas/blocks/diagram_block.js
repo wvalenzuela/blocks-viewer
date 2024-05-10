@@ -2,14 +2,12 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type DiagramBlock {
-        id: LongLong!
-        idDiagram: LongLong!
-        idBlock: LongLong!
+        id: ID!
         xPos: Float
         yPos: Float
         createdAt: String!
         updatedAt: String!
-        block: Block
+        block: Block!
     }
     input InputDiagramBlock {
         id: LongLong!

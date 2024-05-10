@@ -1,18 +1,10 @@
 export default (sequelize, DataTypes) => {
     const DiagramBlock = sequelize.define('diagram_block', {
         id: {
-            type: DataTypes.BIGINT,
-            autoIncrement: true,
+            type: DataTypes.INTEGER,
             primaryKey: true,
-        },
-        idDiagram: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-        },
-        idBlock: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-        },
+            autoIncrement: true,
+          },
         xPos: {
             type: DataTypes.FLOAT,
             allowNull: false,
@@ -35,8 +27,10 @@ export default (sequelize, DataTypes) => {
         })*/
         //DiagramBlock.belongsToMany(models.Diagram, { through: models.DiagramLine, as: 'block', foreignKey: 'idBlockOut' });
         //DiagramBlock.belongsToMany(models.Diagram, { through: models.DiagramLine, as: 'block', foreignKey: 'idBlockIn' });
-        DiagramBlock.belongsTo(models.Block, { as: 'block', foreignKey: 'idBlock'})
-        
+       // DiagramBlock.belongsTo(models.Block, { as: 'block', foreignKey: 'idBlock'})
+        //DiagramBlock.belongsToMany(models.DiagramLine), { as: 'diagramlines', foreignKey: 'idBlockOut'}
+        DiagramBlock.belongsTo(models.Diagram);
+        DiagramBlock.belongsTo(models.Block);
     };
     return DiagramBlock;
 };

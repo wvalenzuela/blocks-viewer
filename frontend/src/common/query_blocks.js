@@ -46,6 +46,10 @@ query Query($name: String, $page: Int, $limit: Int) {
       color
       createdAt
       updatedAt
+      block_port {
+        id
+        type
+      }
     }
     errors {
       path
@@ -92,6 +96,77 @@ export const MutationRegisterBlock = (inputs) => {
         query: print(MUTATION_REGISTER_BLOCK),
         variables: {
             inputs,
+        },
+    });
+};
+
+const QUERY_BLOCK = gql`
+query Block($blockId: ID!) {
+  block(id: $blockId) {
+    id
+    name
+    color
+    createdAt
+    updatedAt
+    ports {
+      id
+      type
+      multi
+      position
+      createdAt
+      updatedAt
+      port {
+        id
+        name
+        color
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+`;
+
+export const QueryBlock = (blockId) => {
+    return axios.post(HTTP_ADDRESS_GRAPHQL, {
+        query: print(QUERY_BLOCK),
+        variables: {
+            blockId
+        },
+    });
+};
+
+const MUTATION_CREATE_BLOCK = gql`
+mutation Mutation($input: CreateBlockInput!) {
+  createBlock(input: $input) {
+    id
+    name
+    color
+    createdAt
+    updatedAt
+    ports {
+      id
+      type
+      multi
+      position
+      createdAt
+      updatedAt
+      port {
+        id
+        name
+        color
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}
+`;
+export const MutationCreateBlock = (input) => {
+    return axios.post(HTTP_ADDRESS_GRAPHQL, {
+        query: print(MUTATION_CREATE_BLOCK),
+        variables: {
+            input,
         },
     });
 };

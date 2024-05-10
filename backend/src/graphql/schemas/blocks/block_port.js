@@ -2,13 +2,13 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type BlockPort {
-        id: LongLong!
-        idBlock: LongLong!
-        idPort: LongLong!
+        id: ID!
         type: String!
+        multi: Boolean!
         position: LongLong!
         createdAt: String!
         updatedAt: String!
+        port: Port!
     }
     input InputBlockPort {
         id: LongLong!
@@ -36,6 +36,7 @@ const TYPEDEFS = gql`
             name: String
             page: Int
             limit: Int
+            idBlock: Int!
         ): BlockPortResponse! @auth
     }
     input RegisterBlockPort {

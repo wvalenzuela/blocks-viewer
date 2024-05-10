@@ -5,10 +5,6 @@ export default (sequelize, DataTypes) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    idDiagram: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-    },
     idBlockOut: {
       type: DataTypes.BIGINT,
       allowNull: false,
@@ -50,8 +46,9 @@ export default (sequelize, DataTypes) => {
       as: 'portIn',
       foreignKey: 'idPortIn',
     })*/
-    DiagramLine.belongsTo(models.DiagramBlock, { as: 'outputblock', foreignKey: 'idBlockOut'})
-    DiagramLine.belongsTo(models.DiagramBlock, { as: 'inputblock', foreignKey: 'idBlockIn'})
+    //DiagramLine.belongsTo(models.DiagramBlock, { as: 'outputblock', foreignKey: 'idBlockOut'})
+    //DiagramLine.belongsTo(models.DiagramBlock, { as: 'inputblock', foreignKey: 'idBlockIn'})
+    DiagramLine.belongsTo(models.Diagram);
   };
   return DiagramLine;
 };

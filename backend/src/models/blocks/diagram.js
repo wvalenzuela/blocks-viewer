@@ -1,10 +1,5 @@
 export default (sequelize, DataTypes) => {
   const Diagram = sequelize.define('diagram', {
-    id: {
-      type: DataTypes.BIGINT,
-      autoIncrement: true,
-      primaryKey: true,
-    },
     /**idUser: {
       type: DataTypes.BIGINT,
     },*/
@@ -12,8 +7,10 @@ export default (sequelize, DataTypes) => {
   });
   Diagram.associate = (models) => {
     //N:M
-    Diagram.hasMany(models.DiagramBlock, {as: "diagramblocks", foreignKey: "diagramId"})
-    Diagram.hasMany(models.DiagramLine, {as: "diagramline", foreignKey: "diagramId"})
+    //Diagram.hasMany(models.DiagramBlock, {as: "diagramblocks", foreignKey: "diagramId"})
+    //Diagram.hasMany(models.DiagramLine);
+    //Diagram.belongsToMany(models.Block, { through: models.DiagramBlock });        
+
   };
   return Diagram;
 };

@@ -68,7 +68,9 @@ class Interactor {
         return this.currentLine;
     }
     destroyLine(line) {
-        this.renderer.removeActor(line.lineActor);
+        console.log("destroyed line")
+        this.renderer.removeActor(line.multiPrimitiveActor);
+        this.diagram.lines = this.diagram.lines.filter(item => item !== line)
         line = null;
         this.currentLine = null;
     }
@@ -195,8 +197,33 @@ class Interactor {
                 return;
             } else {
                 //handle connection
-                this.currentLine.drawLine(this.lastProcessedActor.getPosition(), prop.getPosition());
-                this.renderer.getRenderWindow().render()
+                //this.currentLine.drawLine(this.lastProcessedActor.getPosition(), prop.getPosition());
+                //this.renderer.getRenderWindow().render()
+                const port1 = this.diagram.relation.get(prop)
+                const port2 = this.diagram.relation.get(this.lastProcessedActor)
+                let outputPort;
+                let inputPort;
+                if (port1.type === "output") {
+                    //const start = this.currentLine.start;
+                    //const end = this.currentLine.end;
+                    //this.currentLine.start = end;
+                    //this.currentLine.end = start;
+                    outputPort = port1;
+                    inputPort = port2;
+                } else {
+                    outputPort = port2;
+                    inputPort = port1;
+                }
+                this.currentLine.drawLine(outputPort.circleActor.getPosition(),inputPort.circleActor.getPosition());
+                this.renderer.getRenderWindow().render();
+                this.currentLine.outputPort = outputPort;
+                this.currentLine.inputPort = inputPort;
+                port1.connection = this.currentLine;
+                port2.connection = this.currentLine;
+                //const connection = {"idBlockOut": port1.block, "idPortOut": port1.bpid, "idBlockIn": port2.block, "idPortIn": port2.bpid}
+                //this.diagram.connections.push(connection)
+                this.diagram.lines.push(this.currentLine);
+                this.currentLine = null;
                 return
             }
         } else {

@@ -1,31 +1,23 @@
 export default (sequelize, DataTypes) => {
     const BlockPort = sequelize.define('block_port', {
         id: {
-            type: DataTypes.BIGINT,
-            autoIncrement: true,
+            type: DataTypes.INTEGER,
             primaryKey: true,
-        },
-        idBlock: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-        },
-        idPort: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-        },
+            autoIncrement: true,
+          },
         type: {
             type: DataTypes.ENUM('in', 'out'),
         },
         position: {
             type: DataTypes.BIGINT,
             allowNull: false,
-        },  
-    }, {
-        indexes: [{
-            unique: false,
-            fields: ['idBlock', 'idPort']
-        }]
+        },
+        multi: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        }
     });
+
     BlockPort.associate = (models) => {
         //
         /*
@@ -37,8 +29,12 @@ export default (sequelize, DataTypes) => {
             as: "port",
             foreignKey: "idPort",
         })  */
-        //BlockPort.belongsTo(models.Block, { foreignKey: 'idBlock' });
-        //BlockPort.belongsTo(models.Port, { foreignKey: 'idPort' });
+        BlockPort.belongsTo(models.Block);
+        BlockPort.belongsTo(models.Port);
+
+
     };
+
+
     return BlockPort;
 };

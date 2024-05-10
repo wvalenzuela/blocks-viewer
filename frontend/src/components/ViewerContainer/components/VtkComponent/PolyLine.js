@@ -5,9 +5,12 @@ import vtkPolydata from '@kitware/vtk.js/Common/DataModel/PolyData';
 
 
 class PolyLine{
-    constructor(renderer, output) {
+    constructor(renderer) {
         this.renderer = renderer;
-        this.output = output;
+        this.inputPort = null;
+        this.outputPort = null;
+        this.start = null;
+        this.end = null;
         this.multiPrimitiveData = vtkPolydata.newInstance();
         this.multiPrimitiveMapper = vtkMapper.newInstance();
         this.multiPrimitiveActor = vtkActor.newInstance();
@@ -20,6 +23,8 @@ class PolyLine{
 
     //to implement with alg that line has same thickness now onely y is thickened 
     drawLine(start, end){
+        this.start = start;
+        this.end = end;
         const blockLineThickness = 0.05;
         const p1 = start;
         const temp = (start[0]+end[0])/2

@@ -2,7 +2,7 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type Port {
-        id: LongLong!
+        id: ID!
         name: String!
         color: String!
         createdAt: String!
@@ -33,6 +33,9 @@ const TYPEDEFS = gql`
             page: Int
             limit: Int
         ): PortResponse! @auth
+    }
+    type Query {
+        port(id: ID!): Port
     }
     input RegisterPort {
         name: String

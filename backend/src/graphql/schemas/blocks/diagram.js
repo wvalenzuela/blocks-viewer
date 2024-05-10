@@ -3,10 +3,12 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type Diagram {
-        id: LongLong
+        id: ID!
         name: String!
         createdAt: String!
         updatedAt: String!
+        blocks: [DiagramBlock]
+        lines: [DiagramLine]
     }
     input InputDiagram {
         id: LongLong
@@ -46,6 +48,21 @@ const TYPEDEFS = gql`
             limit: Int
             id: Int!
         ): DiagramBlockResponse! @auth
+    }
+    type Query {
+        diagram(id: ID!): Diagram
+    }
+    type Mutation {
+        createDiagram(input: CreateDiagramInput!): Diagram
+    }
+    input CreateDiagramInput {
+        name: String!
+        blocks: [BlockInput]
+    }
+    input BlockInput {
+        blockId: ID!
+        xPos: Float!
+        yPos: Float!
     }
     input RegisterDiagram {
         name: String!

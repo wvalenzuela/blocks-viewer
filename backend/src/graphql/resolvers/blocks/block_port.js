@@ -4,11 +4,16 @@ const RESOLVER = {
     Query: {
         allBlockPorts: async (
             parent,
-            {name, page, limit},
+            {name, page, limit, idBlock},
             {models, user}
         ) =>{
             try {
-                const blockPorts = await models.BlockPort.findAll()
+                const options = {
+                    where: {},
+                };
+                options.where.idBlock = idBlock;
+                const blockPorts = await models.BlockPort.findAll(options)
+                console.log(blockPorts);
                 return {
                     ok: true,
                     blockPorts,

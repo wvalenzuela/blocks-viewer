@@ -2,12 +2,12 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type Block {
-        id: LongLong!
+        id: ID!
         name: String!
         color: String!
         createdAt: String!
         updatedAt: String!
-        port: [Port]
+        ports: [BlockPort!]!
     }
     input InputBlock {
         id: LongLong
@@ -43,12 +43,29 @@ const TYPEDEFS = gql`
             id: Int!
         ): BlocksResponse! @auth
     }
+    type Query {
+        block(id: ID!): Block
+    }
+    type Mutation {
+        createBlock(input: CreateBlockInput!): Block
+    }
+    input CreateBlockInput {
+        name: String!
+        color: String!
+        ports: [PortInput]
+    }
+    input PortInput {
+        portId: ID!
+        type: String!
+        multi: Boolean!
+        position: Int!
+    }
     input RegisterBlock {
         name: String!
         color: String!
     }
     input InputBlockDetails {
-        id: LongLong
+        portId: LongLong
         name: String
         color: String
     }

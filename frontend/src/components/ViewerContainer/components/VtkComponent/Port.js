@@ -3,11 +3,12 @@ import vtkMapper          from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkCircleSource from '@kitware/vtk.js/Filters/Sources/CircleSource';
 
 class Port {
-    constructor(x, y, type, block){
+    constructor(x, y, type, block, id, bpid){
+        this.id = id;
+        this.bpid = bpid;
         this.block = block;
         this.type = type;
-        this.in = null;
-        this.out = null;
+        this.connection = null;
         this.circle = vtkCircleSource.newInstance({
             resolution: 100, // Number of points to define the circle
             radius: 0.15
@@ -23,7 +24,7 @@ class Port {
         this.circleActor.setMapper(this.circleMapper);
         
         this.block.renderer.addActor(this.circleActor);
-        this.block.ports.push(this.circleActor);
+        this.block.ports.push(this);
         this.block.diagram.relation.set(this.circleActor, this);
     }
 }
