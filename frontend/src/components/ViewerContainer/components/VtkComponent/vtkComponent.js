@@ -30,12 +30,12 @@ function VtkComponent() {
   // const [coneResolution, setConeResolution] = useState(6);
   const addBlock = (block) => {
     diagramRef.current.createBlock(0,0,block.ports,block.color,block.id,null);
-  } 
+  }
   const loadDiagram = (diagramData) => {
     //diagramRef.current.renderer.removeAllActors();
     //const temprenderer = diagramRef.current.renderer;
     //diagramRef.current = new Diagram(temprenderer, diagramData.name)
-    diagramRef.current.buildDiagram(diagramData); 
+    diagramRef.current.buildDiagram(diagramData);
   }
   const saveDiagram = () => {
     return diagramRef.current.saveDiagram();
@@ -109,19 +109,20 @@ function VtkComponent() {
 
   return (
       <div
-        style={{ flex: "1 0 auto", border: "1px black solid" }}
-        ref={flexContainer}
+          style={{flex: "1 0 auto"}}
+          ref={flexContainer}
       >
-        <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
-        <div>
-        <Interface
-        addBlock={addBlock}
-        loadDiagram={loadDiagram}
-        saveDiagram={saveDiagram}
-      ></Interface>
+        <div style={{width:'100%'}}>
+          <Interface
+              addBlock={addBlock}
+              loadDiagram={loadDiagram}
+              saveDiagram={saveDiagram}
+          ></Interface>
         </div>
+        <div ref={vtkContainerRef} style={{width: "100%", height: "100%", border: "1px black solid"}}/>
+
       </div>
-      
+
   );
 }
 
