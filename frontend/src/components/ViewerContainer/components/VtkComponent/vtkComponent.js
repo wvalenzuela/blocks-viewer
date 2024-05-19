@@ -210,19 +210,21 @@ function VtkComponent() {
   }, [vtkContainerRef]);
 
   return (
-    <div
-      style={{ flex: "1 0 auto", border: "1px black solid" }}
-      ref={flexContainer}
-    >
-      <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
-      <div>
-        <Interface
-          addBlock={addBlock}
-          loadDiagram={loadDiagram}
-          saveDiagram={saveDiagram}
-        ></Interface>
+      <div
+          style={{flex: "1 0 auto"}}
+          ref={flexContainer}
+      >
+        <div style={{width:'100%'}}>
+          <Interface
+              addBlock={addBlock}
+              loadDiagram={loadDiagram}
+              saveDiagram={saveDiagram}
+          ></Interface>
+        </div>
+        <div ref={vtkContainerRef} style={{width: "100%", height: "100%", border: "1px black solid"}}/>
+
       </div>
-    </div>
+
   );
 }
 
