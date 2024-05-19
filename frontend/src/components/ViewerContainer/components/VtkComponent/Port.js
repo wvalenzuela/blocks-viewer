@@ -8,7 +8,7 @@ class Port {
         this.bpid = bpid;
         this.block = block;
         this.type = type;
-        this.connection = null;
+        this.connection = [];
         this.circle = vtkCircleSource.newInstance({
             resolution: 100, // Number of points to define the circle
             radius: 0.15

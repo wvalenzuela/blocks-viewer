@@ -81,12 +81,14 @@ class Block {
         this.ports.forEach(port => {
             const oCP = port.circleActor.getPosition();
             port.circleActor.setPosition(oCP[0]+deltaX, oCP[1]+deltaY,0);
-            if (port.connection) {
-                if (port.type === "input") {
-                    port.connection.drawLine(port.connection.start, [port.connection.end[0]+deltaX, port.connection.end[1]+deltaY, 0])
-                } else {
-                    port.connection.drawLine([port.connection.start[0]+deltaX, port.connection.start[1]+deltaY, 0], port.connection.end)
-                }
+            if (port.connection.length !== 0) {
+                port.connection.forEach((line) => {
+                    if (port.type === "input") {
+                        line.drawLine(line.start, [line.end[0]+deltaX, line.end[1]+deltaY, 0])
+                    } else {
+                        line.drawLine([line.start[0]+deltaX, line.start[1]+deltaY, 0], line.end)
+                    }
+                })
             }
           })
         this.renderer.removeActor(this.planeActor);

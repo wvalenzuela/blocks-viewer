@@ -1,14 +1,14 @@
 import { useRef, useEffect, useState, useCallback } from "react";
-
 import "@kitware/vtk.js/Rendering/Profiles/Geometry";
 import vtkOpenGLRenderWindow from "@kitware/vtk.js/Rendering/OpenGL/RenderWindow";
 import vtkRenderWindow from "@kitware/vtk.js/Rendering/Core/RenderWindow";
 import vtkRenderer from "@kitware/vtk.js/Rendering/Core/Renderer";
 import vtkPicker from "@kitware/vtk.js/Rendering/Core/Picker";
 import Block from "./Block";
+import StyledBlock from "./StyledBlock";
 import Diagram from "./Diagram";
 import Interactor from "./Interactor";
-import Interface from "./Interface/Interface"
+import Interface from "./Interface/Interface";
 import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React from "react";
 import {
@@ -17,6 +17,11 @@ import {
   ServerErrorsString,
   QueryDiagrams,
 } from "../../../../common";
+import { createTextPolydata } from "./Text";
+import vtkMapper          from '@kitware/vtk.js/Rendering/Core/Mapper';
+import vtkActor           from '@kitware/vtk.js/Rendering/Core/Actor';
+import vtkPolydata from '@kitware/vtk.js/Common/DataModel/PolyData';
+import Text from "./Text";
 
 
 function VtkComponent() {
@@ -29,17 +34,25 @@ function VtkComponent() {
   // See the code commented below
   // const [coneResolution, setConeResolution] = useState(6);
   const addBlock = (block) => {
-    diagramRef.current.createBlock(0,0,block.ports,block.color,block.id,null);
-  } 
+    diagramRef.current.createBlock(
+      0,
+      0,
+      block.ports,
+      block.color,
+      block.id,
+      null,
+      block.name,
+    );
+  };
   const loadDiagram = (diagramData) => {
     //diagramRef.current.renderer.removeAllActors();
     //const temprenderer = diagramRef.current.renderer;
     //diagramRef.current = new Diagram(temprenderer, diagramData.name)
-    diagramRef.current.buildDiagram(diagramData); 
-  }
+    diagramRef.current.buildDiagram(diagramData);
+  };
   const saveDiagram = () => {
     return diagramRef.current.saveDiagram();
-  }
+  };
 
   useEffect(() => {
     if (context.current) return;
@@ -48,7 +61,7 @@ function VtkComponent() {
     const renderWindow = vtkRenderWindow.newInstance();
     const renderer = vtkRenderer.newInstance();
     //background color light gray
-    renderer.setBackground(0.8, 0.8, 0.8);
+    renderer.setBackground(0.949, 0.957, 0.961);
     renderWindow.addRenderer(renderer);
 
     const openGlRenderWindow = vtkOpenGLRenderWindow.newInstance();
@@ -60,14 +73,103 @@ function VtkComponent() {
     //create a new diagram and create a block
     const diagram = new Diagram(renderer, "new diagram 4");
     diagramRef.current = diagram;
+
+    const bb = new StyledBlock(
+      renderer,
+      5,
+      5,
+      [],
+      "red",
+      diagram,
+      1,
+      1,
+      "This is a very long text"
+    );
+    
+
     //diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
-   /* diagram.createBlock(
+    /* diagram.createBlock(
       5,
       0,
       ["integer", "boolean"],
       ["integer", "double", "string"],
       [0.8, 1.0, 0.0]
     ); */
+    const gridPoints = [];
+    const gridSpacing = 0.375;
+    const gridSize = 100;
+    for (let i = -gridSize; i <= gridSize; i += gridSpacing) {
+      for (let j = -gridSize; j <= gridSize; j += gridSpacing) {
+        gridPoints.push(i, j, -0.01);
+      }
+    }
+    // mit grid array
+    const gridMapper = vtkMapper.newInstance();
+    const grid = vtkPolydata.newInstance();
+    const gridCircles = []
+    const radius = 0.02;
+    const numPointsAround = 10;
+
+  // Iterate over each input point
+  for (let i = 0; i < gridPoints.length; i += 3) {
+    const x = gridPoints[i];
+    const y = gridPoints[i + 1];
+    const z = gridPoints[i + 2];
+
+    // Calculate points around the given point to form a circle
+    for (let j = 0; j < numPointsAround; j++) {
+      const angle = (2 * Math.PI * j) / numPointsAround; // Angle between each point
+      const newX = x + radius * Math.cos(angle);
+      const newY = y + radius * Math.sin(angle);
+      gridCircles.push(newX, newY, z); // Push coordinates directly into the array
+  }
+}
+
+    const connectionArray = []; //0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,...,multiPrimitiveCirclePoints.length/3
+    for (let i = 0; i < gridCircles.length; i += 3) {
+      connectionArray.push(i / 3);
+    }
+
+    const circlePolyDataArray = []; //multiPrimitiveCircleData.getPolys().setData(Uint32Array.from(
+    for (let i = 0; i < connectionArray.length; i += 10) {
+      circlePolyDataArray.push(
+        10,
+        i,
+        i + 1,
+        i + 2,
+        i + 3,
+        i + 4,
+        i + 5,
+        i + 6,
+        i + 7,
+        i + 8,
+        i + 9
+      );
+    }
+
+    //create polydata
+    grid
+      .getPoints()
+      .setData(Float32Array.from(gridCircles), 3);
+    grid
+      .getPolys()
+      .setData(Uint32Array.from([...circlePolyDataArray]));
+    gridMapper.setInputData(grid);
+
+    const gridActor = vtkActor.newInstance();
+    gridActor.setMapper(gridMapper);
+
+    gridActor.setDragable(false);
+    gridActor.setPickable(false);
+    gridActor.getProperty().setColor(0.863,0.871,0.878)
+
+    renderer.addActor(gridActor);
+
+    //const bb2 = new StyledBlock(renderer,0,0,[],"blue",diagram,1,1)
+    diagram.actors.set(bb.planeActor, "block");
+    //diagram.actors.set(bb2.planeActor, 'block');
+    diagram.blocks.push(bb);
+    //diagram.blocks.push(bb2)
 
     //interactor Class to set up interactor and manipulators
     const interactor = new Interactor(
@@ -93,10 +195,10 @@ function VtkComponent() {
     const handleResize = () => {
       openGlRenderWindow.setSize(window.innerWidth, window.innerHeight);
     };
-
     //tbd
     //window.addEventListener('resize', handleResize);
-
+    const lmfao = createTextPolydata("Block 44");
+   renderer.addActor(lmfao)
     renderer.resetCamera();
     renderWindow.render();
 
@@ -108,20 +210,19 @@ function VtkComponent() {
   }, [vtkContainerRef]);
 
   return (
-      <div
-        style={{ flex: "1 0 auto", border: "1px black solid" }}
-        ref={flexContainer}
-      >
-        <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
-        <div>
+    <div
+      style={{ flex: "1 0 auto", border: "1px black solid" }}
+      ref={flexContainer}
+    >
+      <div ref={vtkContainerRef} style={{ width: "100%", height: "100%" }} />
+      <div>
         <Interface
-        addBlock={addBlock}
-        loadDiagram={loadDiagram}
-        saveDiagram={saveDiagram}
-      ></Interface>
-        </div>
+          addBlock={addBlock}
+          loadDiagram={loadDiagram}
+          saveDiagram={saveDiagram}
+        ></Interface>
       </div>
-      
+    </div>
   );
 }
 

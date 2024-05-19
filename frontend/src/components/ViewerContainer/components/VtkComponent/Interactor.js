@@ -70,6 +70,8 @@ class Interactor {
     destroyLine(line) {
         console.log("destroyed line")
         this.renderer.removeActor(line.multiPrimitiveActor);
+        if (line.inputPort) line.inputPort.connection = line.inputPort.connection.filter(item => item !== line);
+        if (line.outputPort) line.outputPort.connection = line.outputPort.connection.filter(item => item !== line);
         this.diagram.lines = this.diagram.lines.filter(item => item !== line)
         line = null;
         this.currentLine = null;
@@ -125,10 +127,18 @@ class Interactor {
             //if mouse clicking on a port-actor
             } else if (this.diagram.actors.get(this.lastProcessedActor) == 'port') {
                 this.dragging = 'port';
-                 //handle port interaction - tbd
                 this.disablePan();
-                this.createLine(this.renderer, this.lastProcessedActor);
-                return;
+                if (this.diagram.relation.get(this.lastProcessedActor).connection.length === 0) {
+                    this.createLine(this.renderer, this.lastProcessedActor);
+                    return;
+                } else {
+                    //needs fixing for multiple connection
+                    this.currentLine = this.diagram.relation.get(this.lastProcessedActor).connection[0]
+                    this.lastProcessedActor = this.diagram.relation.get(this.lastProcessedActor).type === "input" ? this.currentLine.outputPort.circleActor : this.currentLine.inputPort.circleActor;
+                    this.currentLine.inputPort.connection = this.currentLine.inputPort.connection.filter(item => item !== this.currentLine);
+                    this.currentLine.outputPort.connection = this.currentLine.outputPort.connection.filter(item => item !== this.currentLine);
+                }
+                
             //if mouse not clicking on an actor
             } else {
                 this.dragging = 'neutral';
@@ -162,7 +172,9 @@ class Interactor {
     processSelections(selections, x, y) {
         //resets the color of the last highlighted actor
         if (this.lastPaintedActor) {
-            this.lastPaintedActor.getProperty().setColor(this.lastPaintedActorColor);
+           // this.lastPaintedActor.getProperty().setColor(this.lastPaintedActorColor);
+           this.diagram.relation.get(this.lastPaintedActor).outlineActor.setVisibility(false);
+
         }
         //if no actor is selected set lastProcessedActor 
         if ((!selections || selections.length === 0) && !this.dragging) {
@@ -184,8 +196,11 @@ class Interactor {
         if (this.lastPaintedActor !== prop) {
             this.lastPaintedActorColor = prop.getProperty().getColor();
         }
-        prop.getProperty().setColor(...GREEN);
-        this.lastPaintedActor = prop;
+        //prop.getProperty().setColor(...GREEN);
+        if (this.diagram.actors.get(prop) === 'block') {
+            this.diagram.relation.get(prop).outlineActor.setVisibility(true);
+            this.lastPaintedActor = prop;
+        }
         this.renderer.getRenderWindow().render()
 
     }
@@ -218,8 +233,9 @@ class Interactor {
                 this.renderer.getRenderWindow().render();
                 this.currentLine.outputPort = outputPort;
                 this.currentLine.inputPort = inputPort;
-                port1.connection = this.currentLine;
-                port2.connection = this.currentLine;
+                port1.connection.push(this.currentLine);
+                port2.connection.push(this.currentLine);
+                console.log(port1)
                 //const connection = {"idBlockOut": port1.block, "idPortOut": port1.bpid, "idBlockIn": port2.block, "idPortIn": port2.bpid}
                 //this.diagram.connections.push(connection)
                 this.diagram.lines.push(this.currentLine);

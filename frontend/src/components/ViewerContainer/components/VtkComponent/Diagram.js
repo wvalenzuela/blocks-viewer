@@ -1,5 +1,6 @@
 import Block from './Block';
 import PolyLine from './PolyLine'
+import StyledBlock from './StyledBlock';
 
 
 class Diagram{
@@ -15,8 +16,8 @@ class Diagram{
         //connections idDiagramBock+idBlockPort connected to idDiagramBock+idBlockPort
     }
 
-    createBlock(x, y, ports, color, id, dbid){
-        const block = new Block(this.renderer, x, y, ports, color, this, id,dbid);
+    createBlock(x, y, ports, color, id, dbid,name){
+        const block = new StyledBlock(this.renderer, x, y, ports, color, this, id,dbid,name);
         this.blocks.push(block);
         this.actors.set(block.planeActor, 'block');
         block.ports.forEach(p => {
