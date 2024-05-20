@@ -173,7 +173,7 @@ class Interactor {
         //resets the color of the last highlighted actor
         if (this.lastPaintedActor) {
            // this.lastPaintedActor.getProperty().setColor(this.lastPaintedActorColor);
-           this.diagram.relation.get(this.lastPaintedActor).outlineActor.setVisibility(false);
+           this.diagram.relation.get(this.lastPaintedActor).hideOutline()
 
         }
         //if no actor is selected set lastProcessedActor 
@@ -198,7 +198,7 @@ class Interactor {
         }
         //prop.getProperty().setColor(...GREEN);
         if (this.diagram.actors.get(prop) === 'block') {
-            this.diagram.relation.get(prop).outlineActor.setVisibility(true);
+            this.diagram.relation.get(prop).showOutline()
             this.lastPaintedActor = prop;
         }
         this.renderer.getRenderWindow().render()

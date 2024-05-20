@@ -3,25 +3,14 @@ import "@kitware/vtk.js/Rendering/Profiles/Geometry";
 import vtkOpenGLRenderWindow from "@kitware/vtk.js/Rendering/OpenGL/RenderWindow";
 import vtkRenderWindow from "@kitware/vtk.js/Rendering/Core/RenderWindow";
 import vtkRenderer from "@kitware/vtk.js/Rendering/Core/Renderer";
-import vtkPicker from "@kitware/vtk.js/Rendering/Core/Picker";
-import Block from "./Block";
 import StyledBlock from "./StyledBlock";
 import Diagram from "./Diagram";
 import Interactor from "./Interactor";
 import Interface from "./Interface/Interface";
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
 import React from "react";
-import {
-  GetData,
-  QueryBlocks,
-  ServerErrorsString,
-  QueryDiagrams,
-} from "../../../../common";
-import { createTextPolydata } from "./Text";
 import vtkMapper          from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkActor           from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkPolydata from '@kitware/vtk.js/Common/DataModel/PolyData';
-import Text from "./Text";
 
 
 function VtkComponent() {
@@ -56,7 +45,8 @@ function VtkComponent() {
 
   useEffect(() => {
     if (context.current) return;
-    //replace with diagram class tbd
+
+    console.log("start")
 
     const renderWindow = vtkRenderWindow.newInstance();
     const renderer = vtkRenderer.newInstance();
@@ -69,32 +59,11 @@ function VtkComponent() {
 
     const container = vtkContainerRef.current;
     openGlRenderWindow.setContainer(container);
+    console.log("added renderer")
 
     //create a new diagram and create a block
-    const diagram = new Diagram(renderer, "new diagram 4");
-    diagramRef.current = diagram;
-
-    const bb = new StyledBlock(
-      renderer,
-      5,
-      5,
-      [],
-      "red",
-      diagram,
-      1,
-      1,
-      "This is a very long text"
-    );
     
-
-    //diagram.createBlock(5, 5, ["integer", "boolean"], ["integer", "double","string"], [1.0,0.5,0.0])
-    /* diagram.createBlock(
-      5,
-      0,
-      ["integer", "boolean"],
-      ["integer", "double", "string"],
-      [0.8, 1.0, 0.0]
-    ); */
+    
     const gridPoints = [];
     const gridSpacing = 0.375;
     const gridSize = 100;
@@ -164,6 +133,23 @@ function VtkComponent() {
     gridActor.getProperty().setColor(0.863,0.871,0.878)
 
     renderer.addActor(gridActor);
+    console.log("created grid")
+    const diagram = new Diagram(renderer, "new diagram 4",gridActor);
+    diagramRef.current = diagram;
+    console.log("created diagram")
+
+    const bb = new StyledBlock(
+      renderer,
+      5,
+      5,
+      [],
+      "red",
+      diagram,
+      1,
+      1,
+      "This is a very long text"
+    );
+    console.log("created block")
 
     //const bb2 = new StyledBlock(renderer,0,0,[],"blue",diagram,1,1)
     diagram.actors.set(bb.planeActor, "block");
@@ -176,9 +162,10 @@ function VtkComponent() {
       openGlRenderWindow,
       container,
       renderer,
-      diagram
+      diagram,
     );
     openGlRenderWindow.setSize(container.clientWidth, container.clientHeight);
+    console.log("added interactor")
 
     // window.addEventListener('resize', () => {
     // 	const boundingRect = container.getBoundingClientRect();
@@ -197,10 +184,14 @@ function VtkComponent() {
     };
     //tbd
     //window.addEventListener('resize', handleResize);
-    const lmfao = createTextPolydata("Block 44");
-   renderer.addActor(lmfao)
-    renderer.resetCamera();
-    renderWindow.render();
+    //const lmfao = createTextPolydata("Block 44");
+   //renderer.addActor(lmfao[0])
+   //renderer.addActor(lmfao[1])  
+  //renderer.resetCamera();
+  //renderWindow.render();
+  diagram.renderRoutine();
+  renderer.getActiveCamera().setClippingRange(0.1, 1000)
+  console.log("rendered")
 
     context.current = {
       renderWindow,

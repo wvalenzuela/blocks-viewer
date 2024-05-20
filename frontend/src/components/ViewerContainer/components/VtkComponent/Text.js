@@ -1,6 +1,6 @@
 import vtkActor           from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkMapper          from '@kitware/vtk.js/Rendering/Core/Mapper';
-import vtkPolyData from '@kitware/vtk.js/Common/DataModel/PolyData';
+import vtkPolydata from "@kitware/vtk.js/Common/DataModel/PolyData";
 import vtkPoints from '@kitware/vtk.js/Common/Core/Points';
 import vtkPixelSpaceCallbackMapper from '@kitware/vtk.js/Rendering/Core/PixelSpaceCallbackMapper';
 import vtkDataArray from '@kitware/vtk.js/Common/Core/DataArray'
@@ -10,183 +10,83 @@ import vtkCell from '@kitware/vtk.js/Common/DataModel/Cell';
 import vtkColorTransferFunction from '@kitware/vtk.js/Rendering/Core/ColorTransferFunction';
 import vtkVolumeProperty from '@kitware/vtk.js/Rendering/Core/VolumeProperty';
 
-const { createCanvas } = require('canvas');
 
-
-export function createTextPolydata(text, x,y) {
-
+class Text {
+    constructor(x,y,xOffset, yOffset,text,textSize) {
+        this.polytext = vtkPolydata.newInstance();
+        this.mapper = vtkMapper.newInstance();
+        this.actor = vtkActor.newInstance({ position: [x, y, 0] });
+        this.actor.setPickable(false)
+        this.mapper.setInputData(this.polytext);
+        this.mapper.setColorModeToDirectScalars();
+        this.mapper.setScalarModeToUseCellData()
+        this.actor.setMapper(this.mapper)
+        this.createText(x+xOffset,y+yOffset,text,textSize)
+    }
+    createText(xText,yText,text,textSize) {
+        
+    //create text
     // Create a canvas element
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+    const textCanvas = document.createElement('canvas');
+    const textCtx = textCanvas.getContext('2d');
 
     // Set font properties
-    const fontSize = 128;
+    const fontSize = 64;
     const fontFamily = 'Segoe UI';
     const fontStyle = 'normal';
     const fontWeight = 'normal';
-    ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
+    textCtx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
 
     // Measure text dimensions
-    const textMetrics = ctx.measureText(text);
-    const width = Math.ceil(textMetrics.width);
-    const height = fontSize; // approximate height
+    const textMetrics = textCtx.measureText(text);
+    const textWidth = Math.ceil(textMetrics.width);
+    const textHeight = fontSize; // approximate height
 
     // Resize canvas to fit text
-    canvas.width = width;
-    canvas.height = height;
-   // canvas.style.width = `${width}px`; // Set CSS width to original width
-   // canvas.style.height = `${height}px`;
+    textCanvas.width = textWidth;
+    textCanvas.height = textHeight;
 
     // Clear canvas
-    ctx.clearRect(0, 0, width, height);
+    textCtx.clearRect(0, 0, textWidth, textHeight);
 
     // Set text properties
-    ctx.fillStyle = 'white';
-    ctx.textBaseline = 'top';
-    ctx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
+    textCtx.fillStyle = 'white';
+    textCtx.textBaseline = 'top';
+    textCtx.font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
 
     // Draw text
-    ctx.fillText(text, 0, 0);
-
-   
+    textCtx.fillText(text, 0, 0);
 
     // Convert canvas to ImageData
-    const imageData = ctx.getImageData(0, 0, width, height);
+    const imageData = textCtx.getImageData(0, 0, textWidth, textHeight);
+    const points = []
+    const pointIds = vtkCellArray.newInstance();
+    const scalars = []
+    let cellIndex = 0;
 
-    // Convert ImageData to polydata (for simplicity, we'll use points)
-    const cellArray = vtkCellArray.newInstance();
-
-    const points = vtkPoints.newInstance();
-    const haha = []
-    haha.push(-1000,-1000,0,8000,-1000,0,8000,2000, 0,-1000,2000,0)
-    cellArray.insertNextCell([0,1,2,3])
-    const xd = [];
-    const opacity = [];
-    const col = []
-    col.push(1,1,1,1)
-    //let ind = 4;
-    let ind = 4;
-    for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-            const idx = (y * width + x) * 4; // RGBA
+    for (let y = 0; y < textHeight; y++) {
+        for (let x = 0; x < textWidth; x++) {
+            const idx = (y * textWidth + x) * 4; // RGBA
             const alpha = imageData.data[idx + 3];
             if (alpha > 0) {
-                cellArray.insertNextCell([ind, ind+1,ind+2,ind+3])
-                opacity.push(alpha/255);
-                col.push(0,0,0,alpha/255)
-                //wichtig
-                const xx = x*10
-                const yy = (height-y)*10
-                //cellArray.setData(Float32Array.from([ind,ind+1,ind+2,ind+3]))
-                //wichtig
-                haha.push(xx, yy, 0, xx+10, yy,0,xx+10,yy+10,0,xx,yy+10,0)
-                //wichtig
-                xd.push(4, ind, ind+1, ind+2, ind+3);
-                //wichtig
-                ind = ind + 4;
+                pointIds.insertNextCell([cellIndex, cellIndex+1,cellIndex+2,cellIndex+3])
+                scalars.push(0,0,0,alpha/255)
+                const scale = (textSize/textHeight)
+                const xx = xText + (x*scale)//128, 1.5, 1, 128->0.5
+                const yy = yText + ((textHeight-y)*scale)
+                points.push(xx, yy, 0, xx+scale, yy,0,xx+scale,yy+scale,0,xx,yy+scale,0)
+                cellIndex += 4;
             }
         }
     }
-
-    points.setData(Float32Array.from(haha))
-    
-
-
+    this.polytext.getPoints().setData(Float32Array.from(points), 3);
+    this.polytext.setPolys(pointIds)
     const colorDataArray = vtkDataArray.newInstance({
-         numberOfComponents: 4,
-         values: Float32Array.from(col),
-      });
-     // colorDataArray.setData(Float32Array.from(col));
-
-
-    const multiPrimitiveData = vtkPolyData.newInstance();
-
-    //multiPrimitiveData.setPoints(points)
-
-    multiPrimitiveData.getPoints().setData(Float32Array.from(haha),3)
-
-    
-    //connects the points
-    //multiPrimitiveData.getPolys().setData(Uint16Array.from(
-    //    xd
-    //));
-    multiPrimitiveData.setPolys(cellArray)
-    //multiPrimitiveData.getPolys().insertNextCell()
-
-
-    //console.log(multiPrimitiveData.getCellData().getScalars().getData())
-
-    
-
-    // Array to store cell information
-
-
-
-    multiPrimitiveData.getCellData().setScalars(colorDataArray);
-    multiPrimitiveData.getCellData().getScalars()
-
-
-    const multiPrimitiveMapper = vtkMapper.newInstance();
-
-    multiPrimitiveMapper.setInputData(multiPrimitiveData)
-
-
-    const multiPrimitiveActor = vtkActor.newInstance();
-
-
-    multiPrimitiveActor.setMapper(multiPrimitiveMapper);
-    multiPrimitiveMapper.setScalarModeToUseCellData();
-    multiPrimitiveMapper.setColorModeToDirectScalars()
-   // const lut = vtkColorTransferFunction.newInstance();
-    //for (let i = 0; i < 256; i++) {
-    //    const c = 1-i/255
-     //   lut.addRGBPoint(i, c,c,c, 1)
-    //}
-
-      //lut.addRGBPoint(0, 1,1,1,1)
-      //lut.addRGBPoint(1,1,0,0,0.1);
-      
-   //multiPrimitiveMapper.setLookupTable(lut)
-   //multiPrimitiveMapper.setInterpolateScalarsBeforeMapping(false)
-   const ps = []
-   ps.push(-1000,-1000,0,8000,-1000,0,8000,2000, 0,-1000,2000,0)
-   const cA = vtkCellArray.newInstance();
-   const cc = []
-   cc.push(1,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1)
-   const ccc = vtkDataArray.newInstance({
-    numberOfComponents: 4,
-    values: Float32Array.from(cc),
- });
-
-    cA.insertNextCell([0,1,2,3])
-
-   const poly = vtkPolyData.newInstance()
-   console.log(poly.getPoints().getData())
-   poly.getPoints().setData(Float32Array.from(ps),3)
-   poly.setPolys(cA)
-   poly.getCellData().setScalars(ccc);
-   const map = vtkMapper.newInstance()
-
-    map.setInputData(poly)
-   map.setColorModeToDirectScalars()
- //  map.setScalarModeToUseCellData()
-   const act = vtkActor.newInstance()
-   act.setMapper(map)
-
-    
-
-
-
-
-
-    // Create vtkPolyData
-  //  return multiPrimitiveActor
-  return act
-
-
-
+        values: Float32Array.from(scalars), //white outline
+        numberOfComponents: 4,
+    });
+    this.polytext.getCellData().setScalars(colorDataArray);
+    }
 }
-
-
 
 export default Text;

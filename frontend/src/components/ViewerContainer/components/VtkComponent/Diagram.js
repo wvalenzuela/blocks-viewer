@@ -4,7 +4,7 @@ import StyledBlock from './StyledBlock';
 
 
 class Diagram{
-    constructor(renderer, name){
+    constructor(renderer, name, grid){
         this.renderer = renderer;
         this.blocks = [];
         this.actors = new Map();
@@ -13,6 +13,7 @@ class Diagram{
         this.id = null;
         this.connections = []
         this.lines = [];
+        this.grid = grid
         //connections idDiagramBock+idBlockPort connected to idDiagramBock+idBlockPort
     }
 
@@ -23,8 +24,7 @@ class Diagram{
         block.ports.forEach(p => {
             this.actors.set(p.circleActor, 'port');
         })
-        this.renderer.resetCamera();
-        this.renderer.getRenderWindow().render();
+        this.renderRoutine()
     }
     buildDiagram(diagramData) {
         this.id = diagramData.id;
@@ -77,6 +77,12 @@ class Diagram{
         //create new Diagram and set returned ID
         //for each block create DiagramBlock and set idDiagramBlock for each block
         //for each connection create DiagramLine
+    }
+    renderRoutine(){
+        this.renderer.removeActor(this.grid);
+        this.renderer.resetCamera();
+        this.renderer.addActor(this.grid);
+        this.renderer.getRenderWindow().render();
     }
 }
 
