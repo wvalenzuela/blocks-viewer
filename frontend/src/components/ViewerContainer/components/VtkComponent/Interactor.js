@@ -128,6 +128,7 @@ class Interactor {
             } else if (this.diagram.actors.get(this.lastProcessedActor) == 'port') {
                 this.dragging = 'port';
                 this.disablePan();
+                this.diagram.relation.get(this.lastProcessedActor).increase()
                 if (this.diagram.relation.get(this.lastProcessedActor).connection.length === 0) {
                     this.createLine(this.renderer, this.lastProcessedActor);
                     return;

@@ -22,7 +22,7 @@ class Diagram{
         this.blocks.push(block);
         this.actors.set(block.planeActor, 'block');
         block.ports.forEach(p => {
-            this.actors.set(p.circleActor, 'port');
+            this.actors.set(p.portActor, 'port');
         })
         this.renderRoutine()
     }

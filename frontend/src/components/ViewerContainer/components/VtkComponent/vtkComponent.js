@@ -190,7 +190,6 @@ function VtkComponent() {
   //renderer.resetCamera();
   //renderWindow.render();
   diagram.renderRoutine();
-  renderer.getActiveCamera().setClippingRange(0.1, 1000)
   console.log("rendered")
 
     context.current = {

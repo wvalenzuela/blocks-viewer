@@ -1,6 +1,6 @@
 import vtkActor from "@kitware/vtk.js/Rendering/Core/Actor";
 import vtkMapper from "@kitware/vtk.js/Rendering/Core/Mapper";
-import Port from "./Port";
+import Port from "./PolyPort";
 import vtkPolydata from "@kitware/vtk.js/Common/DataModel/PolyData";
 import vtkCellArray from "@kitware/vtk.js/Common/Core/CellArray";
 import vtkDataArray from "@kitware/vtk.js/Common/Core/DataArray";
@@ -354,8 +354,8 @@ class StyledBlock {
     this.shadowActor.setPosition(pos[0] + deltaX, pos[1] + deltaY, 0);
     this.text.actor.setPosition(pos[0] + deltaX, pos[1] + deltaY, 0);
     this.ports.forEach((port) => {
-      const oCP = port.circleActor.getPosition();
-      port.circleActor.setPosition(oCP[0] + deltaX, oCP[1] + deltaY, 0);
+      const oCP = port.portActor.getPosition();
+      port.portActor.setPosition(oCP[0] + deltaX, oCP[1] + deltaY, 0);
       if (port.connection.length !== 0) {
         port.connection.forEach((line) => {
           if (port.type === "input") {
