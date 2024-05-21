@@ -18,6 +18,7 @@ class Interactor {
     constructor(view, container, renderer, diagram) {
         this.dragging = null;
         this.lastProcessedActor = null;
+        this.lastProcessedParent = null;
         this.lastProcessedBlock = null;
         this.lastPaintedActor = null;
         this.lastPaintedActorColor = null;
@@ -50,7 +51,7 @@ class Interactor {
         this.interactor.onMouseMove((event) => {
             throttle(this.handleMouseMove(event), 20);
             //this.handleMouseMove(event);
-        });
+        }); 
       
           //event listener for left mouse button press
         this.interactor.onLeftButtonPress((event) => {
@@ -86,11 +87,10 @@ class Interactor {
         if (this.dragging == 'block') {
             this.picker.pick([x,y,0], this.renderer);
             const worldCoords = this.picker.getPickPosition();
-            this.lastProcessedBlock.moveBlock(worldCoords[0],worldCoords[1]);
+            this.lastProcessedParent.moveBlock(worldCoords[0],worldCoords[1]);
             this.renderer.getRenderWindow().render()
             return;
         } else if (this.dragging == 'port') {
-            //handle port interaction - tbd
             this.picker.pick([x,y,0], this.renderer);
             const worldCoords = this.picker.getPickPosition();
             this.currentLine.drawLine(this.lastProcessedActor.getPosition(), worldCoords);
@@ -98,7 +98,7 @@ class Interactor {
             return;
         } else if (this.dragging == 'neutral') {
             return;
-        } else { 
+        } /*else {
             this.hardwareSelector.getSourceDataAsync(this.renderer,x,y,x,y).then((result) => {
                 if (result) {
                     this.processSelections(result.generateSelection(x,y,x,y), x,y);
@@ -106,59 +106,76 @@ class Interactor {
                     this.processSelections(null);
                 }
             });      
-        }
+        }*/
     }
 
     handleMouseDown(event) {
-        if (this.lastProcessedActor) {
-            //if mouse clicking on a block-actor
-            if (this.diagram.actors.get(this.lastProcessedActor) == 'block') {
-                this.dragging = 'block';
-                this.disablePan();
-                this.lastProcessedActor.setDragable(false);
-                this.lastProcessedBlock = this.diagram.blocks.find((element) => element.planeActor == this.lastProcessedActor);
-                const x = event.position.x;
-                const y = event.position.y;
-                this.picker.pick([x,y,0], this.renderer);
-                const worldCoords = this.picker.getPickPosition();
-                this.lastProcessedBlock.prevX = worldCoords[0];
-                this.lastProcessedBlock.prevY = worldCoords[1];
-                return;
-            //if mouse clicking on a port-actor
-            } else if (this.diagram.actors.get(this.lastProcessedActor) == 'port') {
-                this.dragging = 'port';
-                this.disablePan();
-                this.diagram.relation.get(this.lastProcessedActor).increase()
-                if (this.diagram.relation.get(this.lastProcessedActor).connection.length === 0) {
-                    this.createLine(this.renderer, this.lastProcessedActor);
+        const x = event.position.x;
+        const y = event.position.y;
+        //selects props at current mouse position
+        this.hardwareSelector.getSourceDataAsync(this.renderer,x,y,x,y).then((result) => {
+            const r = result.generateSelection(x,y,x,y);
+            if (r[0]) {
+                this.lastProcessedActor = r[0].getProperties().prop
+                const lpaType = this.diagram.actors.get(this.lastProcessedActor)
+                this.lastProcessedParent = this.diagram.relation.get(this.lastProcessedActor)
+                //if mouse clicking on a block-actor -> move block
+                if (lpaType == 'block') {
+                    this.dragging = 'block';
+                    this.disablePan();
+                    this.lastProcessedParent.showOutline();
+                    const x = event.position.x;
+                    const y = event.position.y;
+                    this.picker.pick([x,y,0], this.renderer);
+                    const worldCoords = this.picker.getPickPosition();
+                    this.lastProcessedParent.prevX = worldCoords[0];
+                    this.lastProcessedParent.prevY = worldCoords[1];
                     return;
+                //if mouse clicking on a port-actor -> create or remove line
+                } else if (lpaType == 'port') {
+                    this.dragging = 'port';
+                    this.disablePan();
+                    if (this.lastProcessedParent.connection.length === 0) {
+                        this.lastProcessedParent.increase()
+                        this.createLine(this.renderer, this.lastProcessedActor);
+                        return;
+                    } else {
+                        //needs fixing for multiple connection
+                        this.currentLine = this.lastProcessedParent.connection[0]
+                        this.lastProcessedActor = this.lastProcessedParent.type === "input" ? this.currentLine.outputPort.portActor : this.currentLine.inputPort.portActor;
+                        this.lastProcessedParent = this.diagram.relation.get(this.lastProcessedActor);
+                        this.lastProcessedParent.increase();
+                        this.currentLine.inputPort.connection = this.currentLine.inputPort.connection.filter(item => item !== this.currentLine);
+                        this.currentLine.outputPort.connection = this.currentLine.outputPort.connection.filter(item => item !== this.currentLine);
+                    }
+                //if mouse not clicking on an actor
                 } else {
-                    //needs fixing for multiple connection
-                    this.currentLine = this.diagram.relation.get(this.lastProcessedActor).connection[0]
-                    this.lastProcessedActor = this.diagram.relation.get(this.lastProcessedActor).type === "input" ? this.currentLine.outputPort.circleActor : this.currentLine.inputPort.circleActor;
-                    this.currentLine.inputPort.connection = this.currentLine.inputPort.connection.filter(item => item !== this.currentLine);
-                    this.currentLine.outputPort.connection = this.currentLine.outputPort.connection.filter(item => item !== this.currentLine);
+                    this.dragging = 'neutral';
+                    return;
                 }
-                
-            //if mouse not clicking on an actor
             } else {
-                this.dragging = 'neutral';
-                return;
+                this.lastProcessedActor = null;
+                this.lastProcessedParent = null;
             }
-        }
+        });
     }
 
     handleMouseUp(event) {
         this.dragging = null;
-        this.lastProcessedBlock = null;
         if (this.interactorStyle.getNumberOfMouseManipulators() < 2) {
             this.enablePan();
         }
+        if (this.diagram.actors.get(this.lastProcessedActor) === "block") {
+            this.lastProcessedParent.hideOutline()
+            this.renderer.getRenderWindow().render()
+            this.lastProcessedActor = null;
+            this.lastProcessedParent = null;
+        }
         //logic: if currentline -> use hardwareSelector to check if theres a port, if not, destroy line else connect
-        //if (this.currentLine && this.diagram.actors.get(this.lastProcessedActor) == 'port') {
         if (this.currentLine) {
             const x = event.position.x;
             const y = event.position.y;
+            this.lastProcessedParent.decrease()
             const selection = this.hardwareSelector.getSourceDataAsync(this.renderer,x,y,x,y).then((result) => {
                 const r = result.generateSelection(x,y,x,y);
                 if (r[0]) {
@@ -166,6 +183,9 @@ class Interactor {
                 } else {
                     this.destroyLine(this.currentLine);
                 }
+                this.lastProcessedActor = null;
+                this.lastProcessedParent = null;
+                this.renderer.getRenderWindow().render()
             });
         }
     }
@@ -208,44 +228,35 @@ class Interactor {
 
     handleConnect(prop){
         if (this.diagram.actors.get(prop) === 'port') {
-            if (this.diagram.relation.get(prop).type === this.diagram.relation.get(this.lastProcessedActor).type || this.diagram.relation.get(prop).block === this.diagram.relation.get(this.lastProcessedActor).block) {
+            const propParent = this.diagram.relation.get(prop);
+            if (propParent.type === this.lastProcessedParent.type || propParent.block === this.lastProcessedParent.block) {
                 this.destroyLine(this.currentLine);
-                return;
             } else {
                 //handle connection
-                //this.currentLine.drawLine(this.lastProcessedActor.getPosition(), prop.getPosition());
-                //this.renderer.getRenderWindow().render()
                 const port1 = this.diagram.relation.get(prop)
                 const port2 = this.diagram.relation.get(this.lastProcessedActor)
                 let outputPort;
                 let inputPort;
                 if (port1.type === "output") {
-                    //const start = this.currentLine.start;
-                    //const end = this.currentLine.end;
-                    //this.currentLine.start = end;
-                    //this.currentLine.end = start;
                     outputPort = port1;
                     inputPort = port2;
                 } else {
                     outputPort = port2;
                     inputPort = port1;
                 }
-                this.currentLine.drawLine(outputPort.circleActor.getPosition(),inputPort.circleActor.getPosition());
+                console.log(outputPort)
+                console.log(inputPort)
+                this.currentLine.drawLine(outputPort.portActor.getPosition(),inputPort.portActor.getPosition());
                 this.renderer.getRenderWindow().render();
                 this.currentLine.outputPort = outputPort;
                 this.currentLine.inputPort = inputPort;
                 port1.connection.push(this.currentLine);
                 port2.connection.push(this.currentLine);
-                console.log(port1)
-                //const connection = {"idBlockOut": port1.block, "idPortOut": port1.bpid, "idBlockIn": port2.block, "idPortIn": port2.bpid}
-                //this.diagram.connections.push(connection)
                 this.diagram.lines.push(this.currentLine);
                 this.currentLine = null;
-                return
             }
         } else {
             this.destroyLine(this.currentLine);
-            return;
         }
     }
 

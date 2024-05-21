@@ -33,6 +33,7 @@ class Port {
         });
         this.portMapper = vtkMapper.newInstance();
         this.portActor = vtkActor.newInstance({ position: [this.x, this.y, 0.01] });
+        this.portActor.setDragable(false)
         this.block.renderer.addActor(this.portActor);
         this.block.ports.push(this);
         this.block.diagram.relation.set(this.portActor, this);

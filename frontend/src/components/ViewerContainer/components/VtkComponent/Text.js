@@ -21,7 +21,7 @@ class Text {
         this.mapper.setColorModeToDirectScalars();
         this.mapper.setScalarModeToUseCellData()
         this.actor.setMapper(this.mapper)
-        this.createText(x+xOffset,y+yOffset,text,textSize)
+        this.createText(xOffset,yOffset,text,textSize)
     }
     createText(xText,yText,text,textSize) {
         

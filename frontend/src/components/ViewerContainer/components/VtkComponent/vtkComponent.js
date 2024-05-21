@@ -18,6 +18,7 @@ function VtkComponent() {
   const context = useRef(null);
   const flexContainer = useRef(null);
   const diagramRef = useRef(null);
+  let yBlock = 0; //increase y-coordinate so that blocks dont get added on top of eachother
 
   // This is an example of how you can use states
   // See the code commented below
@@ -25,13 +26,14 @@ function VtkComponent() {
   const addBlock = (block) => {
     diagramRef.current.createBlock(
       0,
-      0,
+      yBlock,
       block.ports,
       block.color,
       block.id,
       null,
       block.name,
     );
+    yBlock += 5
   };
   const loadDiagram = (diagramData) => {
     //diagramRef.current.renderer.removeAllActors();
@@ -137,7 +139,7 @@ function VtkComponent() {
     const diagram = new Diagram(renderer, "new diagram 4",gridActor);
     diagramRef.current = diagram;
     console.log("created diagram")
-
+/*
     const bb = new StyledBlock(
       renderer,
       5,
@@ -149,13 +151,7 @@ function VtkComponent() {
       1,
       "This is a very long text"
     );
-    console.log("created block")
-
-    //const bb2 = new StyledBlock(renderer,0,0,[],"blue",diagram,1,1)
-    diagram.actors.set(bb.planeActor, "block");
-    //diagram.actors.set(bb2.planeActor, 'block');
-    diagram.blocks.push(bb);
-    //diagram.blocks.push(bb2)
+    console.log("created block")*/
 
     //interactor Class to set up interactor and manipulators
     const interactor = new Interactor(

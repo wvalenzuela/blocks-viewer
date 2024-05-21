@@ -39,7 +39,7 @@ class StyledBlock {
     this.mapper.setInputData(this.polydata);
     const segments = Math.max(1, ports.filter(obj => obj.type === "in").length, ports.filter(obj => obj.type === "out").length);
     this.text = new Text(x,y,0.25,0.25+((segments-1)*0.8),this.name,0.3)
-    this.createPoints(x, y, segments);
+    this.createPoints(0, 0, segments);
     this.shadowMapper = vtkMapper.newInstance();
     this.shadowMapper.setColorModeToDirectScalars()
     this.shadowMapper.setScalarModeToUsePointData()
@@ -47,6 +47,7 @@ class StyledBlock {
     this.shadowActor = vtkActor.newInstance({position: [x,y,0]})
     this.shadowActor.setMapper(this.shadowMapper);
     this.shadowActor.setPickable(false)
+    this.shadowActor.setDragable(false)
     this.renderer.addActor(this.shadowActor)
     this.renderer.addActor(this.planeActor);
     this.diagram.relation.set(this.planeActor, this);
@@ -54,15 +55,6 @@ class StyledBlock {
     this.renderer.addActor(this.text.actor)
   }
   createPorts(ports, segments) {
-    const counts = ports.reduce(
-      (acc, port) => {
-        acc[port.type]++;
-        return acc;
-      },
-      { in: 0, out: 0 }
-    );
-    let inputSpacing = (1.5 + 2 * 0.15) / (counts.in + 1);
-    let outputSpacing = (1.5 + 2 * 0.15) / (counts.out + 1);
     let ii = segments -1;
     let io = segments -1;
     ports.forEach((port) => {
@@ -342,7 +334,6 @@ class StyledBlock {
   }
 
   moveBlock(eventX, eventY) {
-    // console.log("x= " + eventX + ", y= " + eventY)
     const deltaX = eventX - this.prevX;
     const deltaY = eventY - this.prevY;
     this.prevX = eventX;
@@ -356,7 +347,7 @@ class StyledBlock {
     this.ports.forEach((port) => {
       const oCP = port.portActor.getPosition();
       port.portActor.setPosition(oCP[0] + deltaX, oCP[1] + deltaY, 0);
-      if (port.connection.length !== 0) {
+      if (port.connection.length > 0) {
         port.connection.forEach((line) => {
           if (port.type === "input") {
             line.drawLine(line.start, [

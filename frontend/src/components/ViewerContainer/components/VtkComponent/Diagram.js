@@ -37,6 +37,7 @@ class Diagram{
             const outputs = []
             const id = block.block.id;
             const dbid = block.id;
+            const name = block.block.name
             /*
             block.block.ports.forEach(p => {
                 if (p.type === "in") {
@@ -45,7 +46,7 @@ class Diagram{
                     outputs.push(p);
                 }
             })*/
-            this.createBlock(x,y,block.block.ports,color,id,dbid)
+            this.createBlock(x,y,block.block.ports,color,id,dbid,name)
         })
         this.buildLines(diagramData.lines);
         //for each DiagramBlock create a new block with the Block and Port info
@@ -53,19 +54,15 @@ class Diagram{
     }
     buildLines(lines) {
         lines.forEach(line => {
-            console.log(this.blocks);
             const blockOut = this.blocks.find(block => block.dbid === line.idBlockOut.toString());
             const blockIn = this.blocks.find(block => block.dbid === line.idBlockIn.toString());
-            console.log(blockOut)
             const portOut = blockOut.ports.find(port => port.bpid === line.idPortOut.toString());
             const portIn = blockIn.ports.find(port => port.bpid === line.idPortIn.toString());
             const polyLine = new PolyLine(this.renderer,null);
-            portOut.connection = polyLine;
-            portIn.connection = polyLine;
-            //const connection = {"idBlockOut": portOut.block, "idPortOut": portOut.bpid, "idBlockIn": portIn.block, "idPortIn": portIn.bpid}
-            //this.connections.push(connection)
+            portOut.connection.push(polyLine);
+            portIn.connection.push(polyLine);
             this.lines.push(polyLine);
-            polyLine.drawLine( portOut.circleActor.getPosition(), portIn.circleActor.getPosition());
+            polyLine.drawLine( portOut.portActor.getPosition(), portIn.portActor.getPosition());
             this.renderer.getRenderWindow().render();
         })
     }
