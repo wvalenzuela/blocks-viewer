@@ -24,6 +24,7 @@ class Diagram{
         this.relation = new Map();
         this.connections = [];
         this.lines = [];
+        this.renderer.getRenderWindow().render();
     }
 
     createBlock(x, y, ports, color, id, dbid,name){

@@ -44,6 +44,9 @@ function VtkComponent() {
   const saveDiagram = () => {
     return diagramRef.current.saveDiagram();
   };
+  const handleClear = () => {
+    diagramRef.current.clear()
+  }
 
   useEffect(() => {
     if (context.current) return;
@@ -207,6 +210,7 @@ function VtkComponent() {
               addBlock={addBlock}
               loadDiagram={loadDiagram}
               saveDiagram={saveDiagram}
+              handleClear={handleClear}
           ></Interface>
         </div>
         <div ref={vtkContainerRef} style={{width: "100%", height: "100%", border: "1px black solid", marginTop: '20px'}}/>

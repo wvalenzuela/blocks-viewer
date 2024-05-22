@@ -18,7 +18,7 @@ import {
     QueryDiagram,
 } from "../../../../../common";
 
-export default function Interface({addBlock, loadDiagram, saveDiagram}) {
+export default function Interface({addBlock, loadDiagram, saveDiagram, handleClear}) {
     const [selectedBlock, setSelectedBlock] = React.useState('');
     const [selectedDiagram, setSelectedDiagram] = React.useState('');
     const [blocks, setBlocks] = React.useState([]);
@@ -42,6 +42,9 @@ export default function Interface({addBlock, loadDiagram, saveDiagram}) {
             addBlock(block)
         })
     };
+    const handleButtonClear = () => {
+      handleClear()
+    }
 
   const handleButtonLoadDiagram = () => {
     QueryDiagram(selectedDiagram.id).then((res) => {
@@ -65,7 +68,6 @@ export default function Interface({addBlock, loadDiagram, saveDiagram}) {
     });*/
     return;
   };
-
     const handleButtonSaveDiagram = () => {
         const diagramData = saveDiagram();
         const blocks = [];
@@ -96,7 +98,6 @@ export default function Interface({addBlock, loadDiagram, saveDiagram}) {
             if (lines) {
                 MutationCreateDiagramLines({"diagramId": diagram.id, "lines": lines}).then((res) => {
                     const data = GetData(res);
-                    console.log(data)
                 })
             }
         })
@@ -207,6 +208,8 @@ export default function Interface({addBlock, loadDiagram, saveDiagram}) {
                     variant='standard'
                     onChange={handleDiagramNameChange}
                 />
+                <Button sx={{mr: 1}} variant='contained' onClick={handleButtonClear}>CLEAR</Button>
+
             </div>
         </div>
     );
