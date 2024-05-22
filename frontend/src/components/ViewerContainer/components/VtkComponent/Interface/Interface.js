@@ -46,7 +46,6 @@ export default function Interface({ addBlock, loadDiagram, saveDiagram }) {
   const handleButtonLoadDiagram = () => {
     QueryDiagram(selectedDiagram.id).then((res) => {
       const diagram = GetData(res).diagram;
-      console.log(diagram);
       loadDiagram(diagram);
     })
     /*

@@ -186,6 +186,8 @@ function VtkComponent() {
   //renderer.resetCamera();
   //renderWindow.render();
   diagram.renderRoutine();
+  renderer.getActiveCamera().setPosition(0,0,10);
+  renderWindow.render();
   console.log("rendered")
 
     context.current = {

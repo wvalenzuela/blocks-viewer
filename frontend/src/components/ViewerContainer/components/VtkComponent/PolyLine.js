@@ -5,7 +5,8 @@ import vtkPolydata from '@kitware/vtk.js/Common/DataModel/PolyData';
 
 
 class PolyLine{
-    constructor(renderer) {
+    constructor(renderer,color) {
+        this.color = color
         this.renderer = renderer;
         this.inputPort = null;
         this.outputPort = null;
@@ -14,7 +15,7 @@ class PolyLine{
         this.multiPrimitiveData = vtkPolydata.newInstance();
         this.multiPrimitiveMapper = vtkMapper.newInstance();
         this.multiPrimitiveActor = vtkActor.newInstance();
-        this.multiPrimitiveActor.getProperty().setColor(0.0,0.0,0.0);//to implementen with differen line Types different type differnt color
+        this.multiPrimitiveActor.getProperty().setColor(...this.color);//to implementen with differen line Types different type differnt color
         this.multiPrimitiveMapper.setInputData(this.multiPrimitiveData);
         this.multiPrimitiveActor.setMapper(this.multiPrimitiveMapper);
         this.multiPrimitiveActor.setPickable(false);

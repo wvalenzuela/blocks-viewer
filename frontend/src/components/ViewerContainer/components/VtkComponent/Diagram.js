@@ -16,6 +16,15 @@ class Diagram{
         this.grid = grid
         //connections idDiagramBock+idBlockPort connected to idDiagramBock+idBlockPort
     }
+    clear(){
+        this.renderer.removeAllActors()
+        this.renderer.addActor(this.grid)
+        this.blocks = [];
+        this.actors = new Map();
+        this.relation = new Map();
+        this.connections = [];
+        this.lines = [];
+    }
 
     createBlock(x, y, ports, color, id, dbid,name){
         const block = new StyledBlock(this.renderer, x, y, ports, color, this, id,dbid,name);
@@ -27,6 +36,7 @@ class Diagram{
         this.renderRoutine()
     }
     buildDiagram(diagramData) {
+        this.clear()
         this.id = diagramData.id;
         this.name = diagramData.name;
         diagramData.blocks.forEach((block) => {
@@ -58,7 +68,9 @@ class Diagram{
             const blockIn = this.blocks.find(block => block.dbid === line.idBlockIn.toString());
             const portOut = blockOut.ports.find(port => port.bpid === line.idPortOut.toString());
             const portIn = blockIn.ports.find(port => port.bpid === line.idPortIn.toString());
-            const polyLine = new PolyLine(this.renderer,null);
+            const polyLine = new PolyLine(this.renderer,portOut.color2);
+            polyLine.inputPort = portIn;
+            polyLine.outputPort = portOut;
             portOut.connection.push(polyLine);
             portIn.connection.push(polyLine);
             this.lines.push(polyLine);

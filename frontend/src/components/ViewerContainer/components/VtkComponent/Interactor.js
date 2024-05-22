@@ -65,7 +65,7 @@ class Interactor {
 
     }
     createLine(output) {
-        this.currentLine = new PolyLine(this.renderer, output);
+        this.currentLine = new PolyLine(this.renderer, this.lastProcessedParent.color2);
         return this.currentLine;
     }
     destroyLine(line) {
@@ -244,12 +244,11 @@ class Interactor {
                     outputPort = port2;
                     inputPort = port1;
                 }
-                console.log(outputPort)
-                console.log(inputPort)
                 this.currentLine.drawLine(outputPort.portActor.getPosition(),inputPort.portActor.getPosition());
                 this.renderer.getRenderWindow().render();
                 this.currentLine.outputPort = outputPort;
                 this.currentLine.inputPort = inputPort;
+                this.currentLine.multiPrimitiveActor.getProperty().setColor(outputPort.color2)
                 port1.connection.push(this.currentLine);
                 port2.connection.push(this.currentLine);
                 this.diagram.lines.push(this.currentLine);
