@@ -347,7 +347,7 @@ class ViewerBlocks extends React.Component {
             </Grid>
 
                 {/* RegisterBlock Button*/}
-                <Grid>
+                <Grid style={{marginTop:'10px'}}>
                     <LoadingButton
                         size='small'
                         onClick={this.handleRegister}

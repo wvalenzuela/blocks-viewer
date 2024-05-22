@@ -36,7 +36,7 @@ function VtkComponent() {
     yBlock += 5
   };
   const loadDiagram = (diagramData) => {
-    //diagramRef.current.renderer.removeAllActors();
+    diagramRef.current.renderer.removeAllActors();
     //const temprenderer = diagramRef.current.renderer;
     //diagramRef.current = new Diagram(temprenderer, diagramData.name)
     diagramRef.current.buildDiagram(diagramData);
@@ -209,7 +209,7 @@ function VtkComponent() {
               saveDiagram={saveDiagram}
           ></Interface>
         </div>
-        <div ref={vtkContainerRef} style={{width: "100%", height: "100%", border: "1px black solid"}}/>
+        <div ref={vtkContainerRef} style={{width: "100%", height: "100%", border: "1px black solid", marginTop: '20px'}}/>
 
       </div>
 
