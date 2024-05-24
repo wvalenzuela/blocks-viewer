@@ -11,7 +11,7 @@ import {
     MutationCreateBlock,
     QueryPorts,
 } from '../../../../common';
-import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Checkbox } from '@mui/material';
 
 class ViewerBlocks extends React.Component {
     constructor(props) {
@@ -103,8 +103,7 @@ class ViewerBlocks extends React.Component {
         this.setState({
             inputData: [...inputData, newDataItem],
             idInput: idInput + 1,
-        });
-        
+        });        
     };
     addOutput = () => {
         const { inputs, outputData, idOutput, ports } = this.state;
@@ -138,6 +137,25 @@ class ViewerBlocks extends React.Component {
             outputData: prevState.outputData.filter(item => item.idOutput !== idToRemove)
         }));
     };
+    handleCheckInput = (id) => (event) => {
+        this.setState(prevState => ({
+            inputData: prevState.inputData.map(row =>
+                row.idInput === id
+                    ? { ...row, queryInput: { ...row.queryInput, multi: event.target.checked } }
+                    : row
+            )
+        }));
+    };
+    handleCheckOutput = (id) => (event) => {
+        this.setState(prevState => ({
+            outputData: prevState.outputData.map(row =>
+                row.idInput === id
+                    ? { ...row, queryInput: { ...row.queryInput, multi: event.target.checked } }
+                    : row
+            )
+        }));
+    };
+    
 
     render() {
         const {loading, data, inputData, outputData} = this.state;
@@ -261,7 +279,7 @@ class ViewerBlocks extends React.Component {
                                     <TableRow>
                                         <TableCell>Id</TableCell>
                                         <TableCell>Input Port</TableCell>
-                                        <TableCell>Color</TableCell>
+                                        <TableCell>Multiple Connections</TableCell>
                                         {/* Add more table headers as needed */}
                                     </TableRow>
                                 </TableHead>
@@ -276,7 +294,13 @@ class ViewerBlocks extends React.Component {
                                                 <>
                                                     <TableCell>{row.column1}</TableCell>
                                                     <TableCell>{row.column2}</TableCell>
-                                                    <TableCell>{row.column3}</TableCell>
+                                                    <TableCell>
+                                                        <Checkbox
+                                                            checked={row.queryInput.multi}
+                                                            onChange={this.handleCheckInput(row.idInput)}
+                                                            color="primary"
+                                                        />
+                                                    </TableCell>
                                                     <TableCell>
                                                         <LoadingButton
                                                             size='small'
@@ -307,7 +331,7 @@ class ViewerBlocks extends React.Component {
                                 <TableRow>
                                     <TableCell>Id</TableCell>
                                     <TableCell>Output Port</TableCell>
-                                    <TableCell>Color</TableCell>
+                                    <TableCell>Multiple Connections</TableCell>
                                     {/* Add more table headers as needed */}
                                 </TableRow>
                             </TableHead>
@@ -322,7 +346,13 @@ class ViewerBlocks extends React.Component {
                                         <>
                                             <TableCell>{row.column1}</TableCell>
                                             <TableCell>{row.column2}</TableCell>
-                                            <TableCell>{row.column3}</TableCell>
+                                            <TableCell>
+                                                <Checkbox
+                                                            checked={row.queryInput.multi}
+                                                            onChange={this.handleCheckOutput(row.idInput)}
+                                                            color="primary"
+                                                        />
+                                            </TableCell>
                                             <TableCell>
                                                 <LoadingButton
                                                     size='small'

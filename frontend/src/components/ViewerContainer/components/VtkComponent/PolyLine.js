@@ -18,7 +18,7 @@ class PolyLine{
         this.multiPrimitiveActor.getProperty().setColor(...this.color);//to implementen with differen line Types different type differnt color
         this.multiPrimitiveMapper.setInputData(this.multiPrimitiveData);
         this.multiPrimitiveActor.setMapper(this.multiPrimitiveMapper);
-        this.multiPrimitiveActor.setPickable(false);
+        //this.multiPrimitiveActor.setPickable(false);
         this.renderer.addActor(this.multiPrimitiveActor);
     }
 

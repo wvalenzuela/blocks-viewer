@@ -68,7 +68,9 @@ class StyledBlock {
           this,
           id,
           bpid,
-          this.color
+          this.color,
+          port.name,
+          port.multi,
         );
         ii--;
       } else if (port.type === "out") {
@@ -79,7 +81,9 @@ class StyledBlock {
           this,
           id,
           bpid,
-          this.color
+          this.color,
+          port.name,
+          port.multi
         );
         io--;
       }

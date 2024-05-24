@@ -44,20 +44,13 @@ class Diagram{
             const x = block.xPos;
             const y = block.yPos;
             const color = block.block.color;
+            const ports = block.block.ports;
             const inputs = []
             const outputs = []
             const id = block.block.id;
             const dbid = block.id;
             const name = block.block.name
-            /*
-            block.block.ports.forEach(p => {
-                if (p.type === "in") {
-                    inputs.push(p);
-                } else {
-                    outputs.push(p);
-                }
-            })*/
-            this.createBlock(x,y,block.block.ports,color,id,dbid,name)
+            this.createBlock(x,y,ports,color,id,dbid,name)
         })
         this.buildLines(diagramData.lines);
         //for each DiagramBlock create a new block with the Block and Port info

@@ -26,7 +26,7 @@ class Interactor {
         this.diagram = diagram;
         this.picker = vtkPicker.newInstance();
         this.currentLine = null;
-
+        this.selectedLine = null;
         this.interactor = vtkRenderWindowInteractor.newInstance();
         this.interactor.setView(view);
         this.hardwareSelector = this.interactor.getView().getSelector();
@@ -66,14 +66,15 @@ class Interactor {
     }
     createLine(output) {
         this.currentLine = new PolyLine(this.renderer, this.lastProcessedParent.color2);
+        this.diagram.relation.set(this.currentLine.multiPrimitiveActor, this.currentLine)
         return this.currentLine;
     }
     destroyLine(line) {
-        console.log("destroyed line")
         this.renderer.removeActor(line.multiPrimitiveActor);
         if (line.inputPort) line.inputPort.connection = line.inputPort.connection.filter(item => item !== line);
         if (line.outputPort) line.outputPort.connection = line.outputPort.connection.filter(item => item !== line);
         this.diagram.lines = this.diagram.lines.filter(item => item !== line)
+        this.diagram.relation.delete(line.multiPrimitiveActor)
         line = null;
         this.currentLine = null;
     }
@@ -135,25 +136,33 @@ class Interactor {
                 } else if (lpaType == 'port') {
                     this.dragging = 'port';
                     this.disablePan();
-                    if (this.lastProcessedParent.connection.length === 0) {
+                    let validSelectedLine = false;
+                    if (this.selectedLine) {
+                        validSelectedLine = (this.selectedLine.inputPort === this.lastProcessedParent || this.selectedLine.outputPort === this.lastProcessedParent)
+                    } 
+                    if (this.lastProcessedParent.connection.length === 0 || (this.lastProcessedParent.multi && !validSelectedLine)) {
                         this.lastProcessedParent.increase()
                         this.createLine(this.renderer, this.lastProcessedActor);
                         return;
                     } else {
                         //needs fixing for multiple connection
-                        this.currentLine = this.lastProcessedParent.connection[0]
+                        this.currentLine = validSelectedLine ? this.selectedLine : this.lastProcessedParent.connection[0]
                         this.lastProcessedActor = this.lastProcessedParent.type === "input" ? this.currentLine.outputPort.portActor : this.currentLine.inputPort.portActor;
                         this.lastProcessedParent = this.diagram.relation.get(this.lastProcessedActor);
                         this.lastProcessedParent.increase();
                         this.currentLine.inputPort.connection = this.currentLine.inputPort.connection.filter(item => item !== this.currentLine);
                         this.currentLine.outputPort.connection = this.currentLine.outputPort.connection.filter(item => item !== this.currentLine);
                     }
-                //if mouse not clicking on an actor
+                //mouse clicking on a line?
                 } else {
-                    this.dragging = 'neutral';
-                    return;
+                    this.lastProcessedActor.getProperty().setColor([0,1,0])
+                    if (this.selectedLine) {
+                        this.selectedLine.multiPrimitiveActor.getProperty().setColor(this.selectedLine.color)
+                    }
+                    this.selectedLine = this.diagram.relation.get(this.lastProcessedActor)
                 }
             } else {
+                this.dragging = 'neutral';
                 this.lastProcessedActor = null;
                 this.lastProcessedParent = null;
             }

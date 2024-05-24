@@ -6,7 +6,9 @@ import vtkPoints from '@kitware/vtk.js/Common/Core/Points';
 import vtkPolyData from '@kitware/vtk.js/Common/DataModel/PolyData';
 
 class Port {
-    constructor(x, y, type, block, id, bpid, color) {
+    constructor(x, y, type, block, id, bpid, color, name, multi) {
+        this.name = name;
+        this.multi = multi;
         this.id = id;
         this.bpid = bpid;
         this.block = block;
