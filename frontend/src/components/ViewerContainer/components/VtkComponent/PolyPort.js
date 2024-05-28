@@ -7,6 +7,7 @@ import vtkPolyData from '@kitware/vtk.js/Common/DataModel/PolyData';
 
 
 /**
+ * <The ports are used with the blocks such that blocks can be connected >
  * claculatePoints - Calculate the points of a inner, middle and outer circle
  * createCellArray - Creats 3 different cells for the 3 shapes: 2 annuli and a circle
  * createPort puts all the spahes into one Port
@@ -22,10 +23,7 @@ import vtkPolyData from '@kitware/vtk.js/Common/DataModel/PolyData';
  * @param name name of the port
  * @param multi ?
  * @returns {Port}
- * 
  */
-
-
 class Port {
     constructor(x, y, type, block, id, bpid, color, name, multi) {
         this.name = name;
@@ -64,7 +62,7 @@ class Port {
     }
 
     /**
-     * <Calculate the points of a inner, middle and outer circl based on the x,y coordinate>
+     * <Calculate the points of a inner, middle and outer circl based on the x,y coordinate as middlepoint>
      */
     calculatePoints() {
         // Inner circle points

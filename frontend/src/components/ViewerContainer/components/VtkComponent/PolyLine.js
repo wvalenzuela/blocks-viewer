@@ -2,7 +2,13 @@ import vtkActor           from '@kitware/vtk.js/Rendering/Core/Actor';
 import vtkMapper          from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkPolydata from '@kitware/vtk.js/Common/DataModel/PolyData';
 
-
+/**
+* <draws a line between given points the cornes are rounded >
+* drawLine - draws a line between two points
+* calculateRoundedLinePoints - calculates the points for the rounded corners
+* @param renderer ?
+* @param color color of the line
+*/
 
 class PolyLine{
     constructor(renderer,color) {
@@ -22,6 +28,11 @@ class PolyLine{
         this.renderer.addActor(this.multiPrimitiveActor);
     }
 
+    /**
+     * <draws a runded (if corners) line between start --> p1 --> p2 -->pn --> end>
+     * @param start start point of the line
+     * @param end end point of the line
+     */
     //to implement with alg that line has same thickness now onely y is thickened 
     drawLine(start, end){
         this.start = start;

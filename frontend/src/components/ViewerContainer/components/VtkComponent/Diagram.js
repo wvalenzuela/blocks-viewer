@@ -2,6 +2,20 @@ import Block from './Block';
 import PolyLine from './PolyLine'
 import StyledBlock from './StyledBlock';
 
+/**
+ * <?>
+ * clear - clears all actor from viewer
+ * createBlock 
+ * buildDiagram - ?
+ * buildLines - draws lines between ports
+ * saveDiagram 
+ * renderRoutine - ? 
+ * @param renderer ?
+ * @param name
+ * @param grid ?
+*/
+
+
 
 class Diagram{
     constructor(renderer, name, grid){
@@ -16,6 +30,10 @@ class Diagram{
         this.grid = grid
         //connections idDiagramBock+idBlockPort connected to idDiagramBock+idBlockPort
     }
+
+    /**
+     * <removes all actors from renderer but the grid>
+     */
     clear(){
         this.renderer.removeAllActors()
         this.renderer.addActor(this.grid)
@@ -27,6 +45,17 @@ class Diagram{
         this.renderer.getRenderWindow().render();
     }
 
+    /**
+     * @param x position bottom left corner
+     * @param y position bottom left corner
+     * @param ports ?
+     * @param color color of the port??? or could we remove that because block is white
+     * @param id 
+     * @param dbid ?
+     * @param name
+     * 
+     * <creates a Block>
+     */
     createBlock(x, y, ports, color, id, dbid,name){
         const block = new StyledBlock(this.renderer, x, y, ports, color, this, id,dbid,name);
         this.blocks.push(block);
@@ -36,6 +65,11 @@ class Diagram{
         })
         this.renderRoutine()
     }
+
+    /**
+     * <?>
+     * @param diagramData - ?
+     */
     buildDiagram(diagramData) {
         this.clear()
         this.id = diagramData.id;
@@ -56,6 +90,11 @@ class Diagram{
         //for each DiagramBlock create a new block with the Block and Port info
         //  
     }
+
+    /**
+     * <Calculates and draws the lines between the ports>
+     * @param lines from class PolyLine
+     */
     buildLines(lines) {
         lines.forEach(line => {
             const blockOut = this.blocks.find(block => block.dbid === line.idBlockOut.toString());
@@ -72,6 +111,10 @@ class Diagram{
             this.renderer.getRenderWindow().render();
         })
     }
+
+    /**
+     * <?>
+     */
     saveDiagram(){
         //if override current:
         //drop all DiagramBlock and DiagramLine and continue with new Diagram
@@ -81,6 +124,11 @@ class Diagram{
         //for each block create DiagramBlock and set idDiagramBlock for each block
         //for each connection create DiagramLine
     }
+
+
+    /**
+     * <?>
+     */
     renderRoutine(){
         this.renderer.removeActor(this.grid);
         this.renderer.resetCamera();

@@ -14,6 +14,23 @@ const WHITE = [1, 1, 1];
 const GREEN = [0.1, 0.8, 0.1];
 const RED = [1.0,0,0];
 
+/**
+* <?>
+* createLine  
+* destroyLine - removes line from renderer and diagram
+* handleMouseMove 
+* handleMouseDown 
+* handleMouseUp 
+* processSelections - ?
+* handleConnect - ?
+* enablePan - adds the manipulators for panning with camera
+* disablePan - removes the manipulators for panning with camera
+* @param view ?
+* @param container ?
+* @param renderer ? 
+* @param diagram ?
+
+ */
 class Interactor {
     constructor(view, container, renderer, diagram) {
         this.dragging = null;
@@ -64,11 +81,25 @@ class Interactor {
         });
 
     }
+
+    /**
+     * <Create a line and set its relationships in the diagram>
+     * @param output ?
+     */
     createLine(output) {
         this.currentLine = new PolyLine(this.renderer, this.lastProcessedParent.color2);
         this.diagram.relation.set(this.currentLine.multiPrimitiveActor, this.currentLine)
         return this.currentLine;
     }
+
+    /**
+     * <removes given line from renderer
+     * 
+     * and what else does it do?
+     * 
+     * >
+     * @param line from class PolyLine
+     */
     destroyLine(line) {
         this.renderer.removeActor(line.multiPrimitiveActor);
         if (line.inputPort) line.inputPort.connection = line.inputPort.connection.filter(item => item !== line);
@@ -79,7 +110,11 @@ class Interactor {
         this.currentLine = null;
     }
 
-    //handles the mouse move event
+    
+    /**
+     * <handles the mouse move event>
+     * @param event ?
+     */
     handleMouseMove(event) {
         //current position of the mouse inside the canvas, bottom right is 0,0 and top right is width,heigth
         const x = event.position.x;
@@ -110,6 +145,10 @@ class Interactor {
         }*/
     }
 
+    /**
+     * <handles the mouse down event>
+     * @param event ?
+     */
     handleMouseDown(event) {
         const x = event.position.x;
         const y = event.position.y;
@@ -169,6 +208,10 @@ class Interactor {
         });
     }
 
+    /**
+     * <handles the mouse up event>
+     * @param event ?
+     */
     handleMouseUp(event) {
         this.dragging = null;
         if (this.interactorStyle.getNumberOfMouseManipulators() < 2) {
@@ -198,7 +241,13 @@ class Interactor {
             });
         }
     }
-    
+
+    /**
+     * <?>
+     * @param selections ?
+     * @param x mouse position
+     * @param y mouse position
+     */
     processSelections(selections, x, y) {
         //resets the color of the last highlighted actor
         if (this.lastPaintedActor) {
@@ -235,6 +284,10 @@ class Interactor {
 
     }
 
+    /**
+     * <?>
+     * @param prop ?
+     */
     handleConnect(prop){
         if (this.diagram.actors.get(prop) === 'port') {
             const propParent = this.diagram.relation.get(prop);
@@ -268,12 +321,17 @@ class Interactor {
         }
     }
 
-    //enables panning of the canvas, adds the manipulators for panning
+    /**
+     * <enables panning of the canvas, adds the manipulators for panning>
+     */
     enablePan() {
         this.interactorStyle.addMouseManipulator(this.panManipulator);
         this.interactorStyle.addGestureManipulator(this.gestureManipulator);
     }
-    //disables panning of the canvas, removes the manipulators for panning
+
+    /**
+     * <disables panning of the canvas, adds the manipulators for panning>
+     */
     disablePan() {
         this.interactorStyle.removeAllManipulators();
         this.interactorStyle.resetCurrentManipulator()
