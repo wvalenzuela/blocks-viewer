@@ -18,6 +18,14 @@ import {
     QueryDiagram,
 } from "../../../../../common";
 
+/**
+* <?>
+@param {function} addBlock
+@param {function} loadDiagram
+@param {function} saveDiagram
+@param {function} handleClear ?
+*/
+
 export default function Interface({addBlock, loadDiagram, saveDiagram, handleClear}) {
     const [selectedBlock, setSelectedBlock] = React.useState('');
     const [selectedDiagram, setSelectedDiagram] = React.useState('');
