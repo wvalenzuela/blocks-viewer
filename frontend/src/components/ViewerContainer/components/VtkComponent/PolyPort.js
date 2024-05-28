@@ -5,6 +5,27 @@ import vtkCellArray from '@kitware/vtk.js/Common/Core/CellArray';
 import vtkPoints from '@kitware/vtk.js/Common/Core/Points';
 import vtkPolyData from '@kitware/vtk.js/Common/DataModel/PolyData';
 
+
+/**
+ * claculatePoints - Calculate the points of a inner, middle and outer circle
+ * createCellArray - Creats 3 different cells for the 3 shapes: 2 annuli and a circle
+ * createPort puts all the spahes into one Port
+ * increase - increase the size of the port
+ * decrease - decrease the size of the port
+ * @param x center of the port 
+ * @param y center of the port 
+ * @param type sting, int, boolean etc
+ * @param block the block the port belongs to
+ * @param id ?
+ * @param bpid BlockPortID
+ * @param color color of the port
+ * @param name name of the port
+ * @param multi ?
+ * @returns {Port}
+ * 
+ */
+
+
 class Port {
     constructor(x, y, type, block, id, bpid, color, name, multi) {
         this.name = name;
@@ -42,6 +63,9 @@ class Port {
         this.createPort();
     }
 
+    /**
+     * <Calculate the points of a inner, middle and outer circl based on the x,y coordinate>
+     */
     calculatePoints() {
         // Inner circle points
         for (let i = 0; i < this.numPoints; i++) {
@@ -49,7 +73,7 @@ class Port {
             this.points.insertNextPoint(
                 (this.innerRadius * Math.cos(angle)),
                 (this.innerRadius * Math.sin(angle)),
-                0.01
+                0.01 // Z value so that port is infornt of the block
             );
         }
         
@@ -59,7 +83,7 @@ class Port {
             this.points.insertNextPoint(
                 (this.middleRadius * Math.cos(angle)),
                 (this.middleRadius * Math.sin(angle)),
-                0.01
+                0.01 // Z value so that port is infornt of the block
             );
         }
         
@@ -69,11 +93,16 @@ class Port {
             this.points.insertNextPoint(
                 (this.outerRadius * Math.cos(angle)),
                 (this.outerRadius * Math.sin(angle)),
-                0.01
+                0.01 // Z value so that port is infornt of the block
             );
         }
     }
 
+    /**
+     * <Based on the origin(x,y),inner-,middle- ant outer-Circle 
+     * creats 3 shapes 2 annuli and one circle
+     * aditionally it assigns colors to each shape>
+     */
     createCellArray() {
         for (let i = 0; i < this.numPoints; i++) {
             const nextIndex = (i + 1) % this.numPoints;
@@ -86,8 +115,8 @@ class Port {
             const origin = (0, 0, 0.01);
 
             // Connect origin to inner circle
-            this.cells.insertNextCell([innerPoint1, origin, innerPoint2]);
-            this.colors.push(...this.color1);
+            this.cells.insertNextCell([innerPoint1, origin, innerPoint2]); //creating shape
+            this.colors.push(...this.color1);//assigning color
 
             // Connect inner circle to middle circle
             this.cells.insertNextCell([innerPoint1, middlePoint1, middlePoint2]);
@@ -105,6 +134,10 @@ class Port {
         }
     }
 
+    /**
+     * <creates a portActor with PolyData
+     * and it sets the assigned colors of the shapes>
+     */
     createPort() {
         this.calculatePoints();
         this.createCellArray();
@@ -128,10 +161,11 @@ class Port {
 
         // Actor
         this.portActor.setMapper(this.portMapper);
-
-        // Add actor to renderer
     }
 
+    /**
+     * <Makes the port bigger>
+     */
     increase() {
         const increase = 0.04;  // Adjust the increase value to be consistent with decrease
         this.innerRadius += increase;
@@ -154,8 +188,11 @@ class Port {
         this.portPolyData.getCellData().setScalars(this.portColorData);
     }
 
+    /**
+     * <Makes the port smaller>
+     */
     decrease() {
-        const decrease = 0.04;
+        const decrease = 0.04; // Adjust the increase value to be consistent with decrease
         this.innerRadius -= decrease;
         this.middleRadius -= decrease;
         this.outerRadius -= decrease;
