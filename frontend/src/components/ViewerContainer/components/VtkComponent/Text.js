@@ -11,6 +11,17 @@ import vtkColorTransferFunction from '@kitware/vtk.js/Rendering/Core/ColorTransf
 import vtkVolumeProperty from '@kitware/vtk.js/Rendering/Core/VolumeProperty';
 
 
+/**
+ * <Creates a text as polydata. Renders the text on a canvas and gets the imagedata of the pixels.
+ * Pixels with alpha greater than zero get turned into polygons and added to a polydata object.>
+ * @method createText - creates the text as polydata
+ * @param x position of the block
+ * @param y position of the block
+ * @param xOffset offset for the position of the text
+ * @param yOffset offset for the position of the text
+ * @param text name of the block
+ * @param textSize height of the text in the block
+ */
 class Text {
     constructor(x,y,xOffset, yOffset,text,textSize) {
         this.polytext = vtkPolydata.newInstance();
@@ -23,6 +34,7 @@ class Text {
         this.actor.setMapper(this.mapper)
         this.createText(xOffset,yOffset,text,textSize)
     }
+
     createText(xText,yText,text,textSize) {
         
     //create text
@@ -72,7 +84,7 @@ class Text {
                 pointIds.insertNextCell([cellIndex, cellIndex+1,cellIndex+2,cellIndex+3])
                 scalars.push(0,0,0,alpha/255)
                 const scale = (textSize/textHeight)
-                const xx = xText + (x*scale)//128, 1.5, 1, 128->0.5
+                const xx = xText + (x*scale)
                 const yy = yText + ((textHeight-y)*scale)
                 points.push(xx, yy, 0, xx+scale, yy,0,xx+scale,yy+scale,0,xx,yy+scale,0)
                 cellIndex += 4;
@@ -82,7 +94,7 @@ class Text {
     this.polytext.getPoints().setData(Float32Array.from(points), 3);
     this.polytext.setPolys(pointIds)
     const colorDataArray = vtkDataArray.newInstance({
-        values: Float32Array.from(scalars), //white outline
+        values: Float32Array.from(scalars), 
         numberOfComponents: 4,
     });
     this.polytext.getCellData().setScalars(colorDataArray);

@@ -3,20 +3,17 @@ import PolyLine from './PolyLine'
 import StyledBlock from './StyledBlock';
 
 /**
- * <?>
- * clear - clears all actor from viewer
- * createBlock 
- * buildDiagram - ?
- * buildLines - draws lines between ports
- * saveDiagram 
- * renderRoutine - ? 
- * @param renderer ?
- * @param name
- * @param grid ?
+ * <The Diagram class handles all the created blocks and connections and builds blocks of full diagrams from the database>
+ * @method clear - clears all actor from viewer
+ * @method createBlock - creates a new block object
+ * @method buildDiagram - creates a diagram with the data from the database
+ * @method buildLines - creates the lines with the data from the database
+ * @method saveDiagram - sends the diagram object to the database
+ * @method renderRoutine - renders the viewer and excludes the grid actor to reset the camery properly
+ * @param renderer current renderer
+ * @param name name of the diagram
+ * @param grid grid actor of the viewer
 */
-
-
-
 class Diagram{
     constructor(renderer, name, grid){
         this.renderer = renderer;
@@ -28,7 +25,6 @@ class Diagram{
         this.connections = []
         this.lines = [];
         this.grid = grid
-        //connections idDiagramBock+idBlockPort connected to idDiagramBock+idBlockPort
     }
 
     /**
@@ -48,11 +44,11 @@ class Diagram{
     /**
      * @param x position bottom left corner
      * @param y position bottom left corner
-     * @param ports ?
+     * @param ports list of ports
      * @param color color of the port??? or could we remove that because block is white
-     * @param id 
-     * @param dbid ?
-     * @param name
+     * @param id id of the block-database
+     * @param dbid id of the diagramblock-database
+     * @param name name of the block
      * 
      * <creates a Block>
      */
@@ -67,8 +63,8 @@ class Diagram{
     }
 
     /**
-     * <?>
-     * @param diagramData - ?
+     * <builds the diagram from the database>
+     * @param diagramData - data from the database
      */
     buildDiagram(diagramData) {
         this.clear()
@@ -86,14 +82,12 @@ class Diagram{
             const name = block.block.name
             this.createBlock(x,y,ports,color,id,dbid,name)
         })
-        this.buildLines(diagramData.lines);
-        //for each DiagramBlock create a new block with the Block and Port info
-        //  
+        this.buildLines(diagramData.lines); 
     }
 
     /**
-     * <Calculates and draws the lines between the ports>
-     * @param lines from class PolyLine
+     * <Creates the connections between ports with the data from the database>
+     * @param lines data of the diagramlines-database
      */
     buildLines(lines) {
         lines.forEach(line => {
@@ -113,21 +107,15 @@ class Diagram{
     }
 
     /**
-     * <?>
+     * <returns this Diagram object to be saved in the database>
      */
     saveDiagram(){
-        //if override current:
-        //drop all DiagramBlock and DiagramLine and continue with new Diagram
-        //if new diagram:
         return this;
-        //create new Diagram and set returned ID
-        //for each block create DiagramBlock and set idDiagramBlock for each block
-        //for each connection create DiagramLine
     }
 
 
     /**
-     * <?>
+     * <renders the scene. removes the grid actor, resets the camera and then adds the grid actor back>
      */
     renderRoutine(){
         this.renderer.removeActor(this.grid);

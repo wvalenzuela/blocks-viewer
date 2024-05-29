@@ -6,6 +6,25 @@ import vtkCellArray from "@kitware/vtk.js/Common/Core/CellArray";
 import vtkDataArray from "@kitware/vtk.js/Common/Core/DataArray";
 import Text from "./Text";
 
+
+/**
+ * <The Block class creates the block and its ports, it also provides a function to move the block>
+ * @method createPorts creates the ports of the block
+ * @method createPoints calculates the points of the block and its outline and shadow
+ * @method showOutline shows the outline of the block by coloring the outline polygon the color of the block
+ * @method hideOutline hides the outline of the block by coloring the outline polygon white
+ * @method moveBlock moves the block, its ports and its shadow
+ * @param renderer current renderer 
+ * @param x x-coordinate of the block
+ * @param y y-coordinate of the block
+ * @param ports list of ports 
+ * @param color color of the block
+ * @param diagram current diagram
+ * @param id database id of the block-database
+ * @param dbid database id of the diagramblock-database
+ * @param name name of the block
+ * @returns {Block}
+ */
 class StyledBlock {
   constructor(renderer, x, y, ports, color, diagram, id, dbid, name) {
     this.name = name;
@@ -37,9 +56,9 @@ class StyledBlock {
     this.planeActor.setMapper(this.mapper);
     this.planeActor.setDragable(false)
     this.mapper.setInputData(this.polydata);
-    const segments = Math.max(1, ports.filter(obj => obj.type === "in").length, ports.filter(obj => obj.type === "out").length);
-    this.text = new Text(x,y,0.25,0.25+((segments-1)*0.8),this.name,0.3)
-    this.createPoints(0, 0, segments);
+    const segments = Math.max(1, ports.filter(obj => obj.type === "in").length, ports.filter(obj => obj.type === "out").length);//caluclates the amount of segments the block has
+    this.text = new Text(x,y,0.25,0.25+((segments-1)*0.8),this.name,0.3)//creates a text object that displays the name of the block
+    this.createPoints(0, 0, segments);//calculates the points of the block, its outline and shadow
     this.shadowMapper = vtkMapper.newInstance();
     this.shadowMapper.setColorModeToDirectScalars()
     this.shadowMapper.setScalarModeToUsePointData()
@@ -51,9 +70,13 @@ class StyledBlock {
     this.renderer.addActor(this.shadowActor)
     this.renderer.addActor(this.planeActor);
     this.diagram.relation.set(this.planeActor, this);
-    this.createPorts(ports, segments);
+    this.createPorts(ports, segments);//creates the ports of the block
     this.renderer.addActor(this.text.actor)
   }
+
+  /**
+  * <creates the ports of the block, places each port in a segment from top to bottom>
+  */
   createPorts(ports, segments) {
     let ii = segments -1;
     let io = segments -1;
@@ -69,7 +92,7 @@ class StyledBlock {
           id,
           bpid,
           this.color,
-          port.name,
+          port.port.name,
           port.multi,
         );
         ii--;
@@ -82,13 +105,17 @@ class StyledBlock {
           id,
           bpid,
           this.color,
-          port.name,
+          port.port.name,
           port.multi
         );
         io--;
       }
     });
   }
+
+  /**
+  * <calculates the points of the block and its outline and shadow>
+  */
   createPoints(x,y,segments=1) {
     const length = 5;
     const segmentWidth = 0.8;
@@ -317,6 +344,9 @@ class StyledBlock {
      this.shadow.getPointData().setScalars(shadowScalars)
     
   }
+  /**
+  * <shows the outline of the block by coloring the outline polygon the color of the block>
+  */
   showOutline(){
     const colorDataArray = vtkDataArray.newInstance({
         values: Float32Array.from([...this.color,...this.colors]), //block color outline + colors
@@ -326,6 +356,10 @@ class StyledBlock {
     this.polydata.modified()
     this.mapper.setInputData(this.polydata)
   }
+
+  /**
+  * <hides the outline of the block by coloring the outline polygon white>
+  */
   hideOutline(){
     const colorDataArray = vtkDataArray.newInstance({
         values: Float32Array.from([1,1,1,...this.colors]), //white outline + colors
@@ -336,7 +370,9 @@ class StyledBlock {
     this.mapper.setInputData(this.polydata)
 
   }
-
+  /**
+  * <moves the block, its ports and its shadow>
+  */
   moveBlock(eventX, eventY) {
     const deltaX = eventX - this.prevX;
     const deltaY = eventY - this.prevY;
@@ -368,12 +404,6 @@ class StyledBlock {
         });
       }
     });
-    /*this.renderer.removeActor(this.planeActor);
-    this.renderer.addActor(this.planeActor);
-    this.ports.forEach((port) => {
-      this.renderer.removeActor(port.circleActor);
-      this.renderer.addActor(port.circleActor);
-    });*/
   }
 }
 

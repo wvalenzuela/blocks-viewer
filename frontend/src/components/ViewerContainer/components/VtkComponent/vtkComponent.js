@@ -19,10 +19,6 @@ function VtkComponent() {
   const flexContainer = useRef(null);
   const diagramRef = useRef(null);
   let yBlock = 0; //increase y-coordinate so that blocks dont get added on top of eachother
-
-  // This is an example of how you can use states
-  // See the code commented below
-  // const [coneResolution, setConeResolution] = useState(6);
   const addBlock = (block) => {
     diagramRef.current.createBlock(
       0,
@@ -37,8 +33,6 @@ function VtkComponent() {
   };
   const loadDiagram = (diagramData) => {
     diagramRef.current.renderer.removeAllActors();
-    //const temprenderer = diagramRef.current.renderer;
-    //diagramRef.current = new Diagram(temprenderer, diagramData.name)
     diagramRef.current.buildDiagram(diagramData);
   };
   const saveDiagram = () => {
@@ -142,19 +136,6 @@ function VtkComponent() {
     const diagram = new Diagram(renderer, "new diagram 4",gridActor);
     diagramRef.current = diagram;
     console.log("created diagram")
-/*
-    const bb = new StyledBlock(
-      renderer,
-      5,
-      5,
-      [],
-      "red",
-      diagram,
-      1,
-      1,
-      "This is a very long text"
-    );
-    console.log("created block")*/
 
     //interactor Class to set up interactor and manipulators
     const interactor = new Interactor(
@@ -165,29 +146,9 @@ function VtkComponent() {
     );
     openGlRenderWindow.setSize(container.clientWidth, container.clientHeight);
     console.log("added interactor")
-
-    // window.addEventListener('resize', () => {
-    // 	const boundingRect = container.getBoundingClientRect();
-    // 	openGlRenderWindow.setSize(boundingRect.width, boundingRect.height);
-    // });
-
-    // const observer = new ResizeObserver((entries) => {
-    // 	console.log('ResizeObserver', entries);
-    // 	const boundingRect = container.getBoundingClientRect();
-    // 	openGlRenderWindow.setSize(boundingRect.width, boundingRect.height);
-    // });
-    // observer.observe(container);
-
     const handleResize = () => {
       openGlRenderWindow.setSize(window.innerWidth, window.innerHeight);
     };
-    //tbd
-    //window.addEventListener('resize', handleResize);
-    //const lmfao = createTextPolydata("Block 44");
-   //renderer.addActor(lmfao[0])
-   //renderer.addActor(lmfao[1])  
-  //renderer.resetCamera();
-  //renderWindow.render();
   diagram.renderRoutine();
   renderer.getActiveCamera().setPosition(0,0,10);
   renderWindow.render();

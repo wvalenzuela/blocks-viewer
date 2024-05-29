@@ -4,12 +4,11 @@ import vtkPolydata from '@kitware/vtk.js/Common/DataModel/PolyData';
 
 /**
 * <draws a line between given points the cornes are rounded >
-* drawLine - draws a line between two points
-* calculateRoundedLinePoints - calculates the points for the rounded corners
-* @param renderer ?
+* @method drawLine - draws a line between two points
+* @method calculateRoundedLinePoints - calculates the points for the rounded corners
+* @param renderer current renderer
 * @param color color of the line
 */
-
 class PolyLine{
     constructor(renderer,color) {
         this.color = color
@@ -21,7 +20,7 @@ class PolyLine{
         this.multiPrimitiveData = vtkPolydata.newInstance();
         this.multiPrimitiveMapper = vtkMapper.newInstance();
         this.multiPrimitiveActor = vtkActor.newInstance();
-        this.multiPrimitiveActor.getProperty().setColor(...this.color);//to implementen with differen line Types different type differnt color
+        this.multiPrimitiveActor.getProperty().setColor(...this.color);
         this.multiPrimitiveMapper.setInputData(this.multiPrimitiveData);
         this.multiPrimitiveActor.setMapper(this.multiPrimitiveMapper);
         //this.multiPrimitiveActor.setPickable(false);
@@ -33,7 +32,6 @@ class PolyLine{
      * @param start start point of the line
      * @param end end point of the line
      */
-    //to implement with alg that line has same thickness now onely y is thickened 
     drawLine(start, end){
         this.start = start;
         this.end = end;
@@ -43,64 +41,27 @@ class PolyLine{
         const p2 = [temp,start[1]];
         const p3 = [temp, end[1]];
         const p4 = end;
-
         const pointsArray = [
             { x: p1[0], y: p1[1] },
             { x: p2[0], y: p2[1] },
             { x: p3[0], y: p3[1] },
             { x: p4[0], y: p4[1] },
           ];
-
         const roundedLinePoints = this.calculateRoundedLinePoints(pointsArray)
-
-        const array = [
-            p1[0], p1[1] + blockLineThickness/2, 0,
-            p1[0], p1[1] - blockLineThickness/2, 0,
-            p2[0], p2[1] - blockLineThickness/2, 0,
-            p2[0], p2[1] + blockLineThickness/2, 0,
-            p2[0]+ blockLineThickness/2, p2[1] , 0,
-            p2[0]- blockLineThickness/2, p2[1] , 0,
-            p3[0]- blockLineThickness/2, p3[1] , 0,
-            p3[0]+ blockLineThickness/2, p3[1] , 0,
-            p3[0], p3[1] + blockLineThickness/2, 0,
-            p3[0], p3[1] - blockLineThickness/2, 0,
-            p4[0], p4[1] - blockLineThickness/2, 0,
-            p4[0], p4[1] + blockLineThickness/2, 0,
-        ]
-
-        //Points for the square of the line
-        const multiPrimitvePoints = [
-            start[0] , start[1] + blockLineThickness/2, 0, //first point
-            start[0] , start[1] - blockLineThickness/2, 0, 
-            end[0], end[1] - blockLineThickness/2, 0, 
-            end[0], end[1] + blockLineThickness/2, 0,  // last point
-          ];
-        
-
-        //gets points makes 3 points to one coordinate
-        const multiPrimitiveData = vtkPolydata.newInstance();
+        const multiPrimitiveData = vtkPolydata.newInstance();//makes 3 points to one coordinate
 
         multiPrimitiveData.getPoints().setData(Float32Array.from(roundedLinePoints),3)
         multiPrimitiveData
-  .getLines()
-  .setData(Uint16Array.from([roundedLinePoints.length / 3, ...Array.from({ length: roundedLinePoints.length / 3 }, (_, i) => i)]));
-
-
-        //connects the points
-       /* multiPrimitiveData.getPolys().setData(Uint16Array.from(
-            [
-                4, 0, 1, 2, 3,// first number how many points have to be connectet other number the points to be connected in order left to right
-                4, 4, 5, 6, 7,
-                4, 8, 9, 10, 11,
-            ]
-        ));*/
-
-
+        .getLines()
+        .setData(Uint16Array.from([roundedLinePoints.length / 3, ...Array.from({ length: roundedLinePoints.length / 3 }, (_, i) => i)]));
         this.multiPrimitiveMapper.setInputData(multiPrimitiveData);
+      }
 
 
-
-    }
+      /**
+     * <Creates points that the corners of the line are rounded>
+     * @param pointsArray point of the line without rounded corners
+     */
     calculateRoundedLinePoints(pointsArray) {
         const points = [];
         const controlPoints = [];

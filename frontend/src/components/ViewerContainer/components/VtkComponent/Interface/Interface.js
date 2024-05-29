@@ -19,67 +19,55 @@ import {
 } from "../../../../../common";
 
 /**
-* <?>
-@param {function} addBlock
-@param {function} loadDiagram
-@param {function} saveDiagram
-@param {function} handleClear ?
+* <The Interactor class is a react component to implement the user interface to load and save blocks and diagrams from the database>
+@param {function} addBlock function handled in the parent component to create a block with the data from database
+@param {function} loadDiagram function handled in the parent component to create a diagram with the data from database
+@param {function} saveDiagram function handled in the parent component to save a diagram to the database
+@param {function} handleClear function handled in the parent componenten to clear the viewer
 */
 
 export default function Interface({addBlock, loadDiagram, saveDiagram, handleClear}) {
-    const [selectedBlock, setSelectedBlock] = React.useState('');
-    const [selectedDiagram, setSelectedDiagram] = React.useState('');
-    const [blocks, setBlocks] = React.useState([]);
-    const [diagrams, setDiagrams] = React.useState([]);
-    const [diagramName, setDiagramName] = React.useState("New Diagram")
-    //let blocks = [];
-    //let diagrams = [];
+    const [selectedBlock, setSelectedBlock] = React.useState(''); //state of the block dropdown menu
+    const [selectedDiagram, setSelectedDiagram] = React.useState(''); //state of the diagram dropdown menu
+    const [blocks, setBlocks] = React.useState([]); //state of the blocks queried from the database
+    const [diagrams, setDiagrams] = React.useState([]); //state of the diagrams queried from the database
+    const [diagramName, setDiagramName] = React.useState("New Diagram") //state of the textfield for the diagram name
+    //handle block dropdown change
     const handleChangeBlock = (event) => {
         setSelectedBlock(blocks.find(block => block.id === event.target.value));
     };
+    //handle diagram dropdown change
     const handleChangeDiagram = (event) => {
         setSelectedDiagram(diagrams.find(diagram => diagram.id === event.target.value));
     };
+    //handle diagram name textfield change
     const handleDiagramNameChange = (event) => {
         setDiagramName(event.target.value);
     }
-
+    //handles "Add Block" button, queries the database for the block and its ports
     const handleButtonBlock = () => {
         QueryBlock(selectedBlock.id).then((res) => {
             const block = GetData(res).block;
             addBlock(block)
         })
     };
+    //handles the "Clear" button
     const handleButtonClear = () => {
       handleClear()
     }
-
-  const handleButtonLoadDiagram = () => {
-    QueryDiagram(selectedDiagram.id).then((res) => {
-      const diagram = GetData(res).diagram;
-      loadDiagram(diagram);
-    })
-    /*
-    QueryFullDiagram(null,null,null,selectedDiagram.id).then((res) => {
-      const data = GetData(res);
-      const { ok, diagramBlocks, errors } = data.fullDiagram;
-      if (ok) {
-        loadDiagram(selectedDiagram.id, diagramBlocks);
-        QueryDiagramLines(null,null,null,selectedDiagram.id).then((res) => {
-          const data = GetData(res);
-          const { ok, diagramLines, errors } = data.allDiagramLines;
-          if (ok) loadLines(diagramLines);
-          else throw errors;
-        });
-      } 
-      else throw errors;
-    });*/
+    //handles the "Load Diagram" button, queries the database for the diagram and its blocks
+    const handleButtonLoadDiagram = () => {
+        QueryDiagram(selectedDiagram.id).then((res) => {
+        const diagram = GetData(res).diagram;
+        loadDiagram(diagram);
+        })
     return;
   };
+    //handles the "Save Diagram" button, mutates the database with the diagram and its blocks and lines
     const handleButtonSaveDiagram = () => {
-        const diagramData = saveDiagram();
+        const diagramData = saveDiagram(); //gets the Diagram object
         const blocks = [];
-        diagramData.blocks.forEach(block => {
+        diagramData.blocks.forEach(block => { //creates mutation input from the blocks of the diagram
             const input = {
                 blockId: block.id,
                 xPos: block.x,
@@ -88,12 +76,12 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
             blocks.push(input);
         })
         MutationCreateDiagram({"name": diagramName, "blocks": blocks}).then((res) => {
-            const diagram = GetData(res).createDiagram
+            const diagram = GetData(res).createDiagram //creates a diagram in the database
             diagramData.blocks.map((block, index) => {
-                block.dbid = diagram.blocks[index].id;
+                block.dbid = diagram.blocks[index].id; //mutation returns dbid of each block, sets the dbid for each block object
             })
             const lines = [];
-            diagramData.lines.forEach(line => {
+            diagramData.lines.forEach(line => { //creates the mutation input for each line
                 console.log(line);
                 const input = {
                     idBlockIn: line.inputPort.block.dbid,
@@ -103,42 +91,15 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
                 }
                 lines.push(input)
             })
-            if (lines) {
+            if (lines) { //creates the lines in the database
                 MutationCreateDiagramLines({"diagramId": diagram.id, "lines": lines}).then((res) => {
                     const data = GetData(res);
                 })
             }
         })
-        /*
-        MutationRegisterDiagram({"name": diagramName}).then((res) => {
-          const data = GetData(res);
-          const { ok, diagram, errors } = data.registerDiagrams;
-          console.log(data)
-          const promises = diagramData.blocks.map(block => {
-            return MutationRegisterDiagramBlock({"idDiagram": diagram.id, "idBlock": block.id, "xPos": block.x, "yPos": block.y}).then((res) => {
-              const data = GetData(res);
-              console.log(data)
-              const {diagramBlock } = data.registerDiagramBlocks;
-              block.dbid = diagramBlock.id
-              //diagram line with block.dbid and connections
-            });
-          })
-          Promise.all(promises).then(()=> {
-            diagramData.connections.forEach(connection => {
-              MutationRegisterDiagramLine({"idDiagram": diagram.id, "idBlockOut": connection.idBlockOut.dbid, "idPortOut": connection.idPortOut, "idBlockIn": connection.idBlockIn.dbid, "idPortIn":connection.idPortIn}).then((res) => {
-                const data = GetData(res);
-                const { ok, diagramLine, errors } = data.registerDiagramLines;
-                console.log(diagramLine)
-              })
-            })
-          })
-
-        });*/
-
-
         return;
     };
-    React.useEffect(() => {
+    React.useEffect(() => { //queries the blocks and diagrams from the database for the dropdown menus
         QueryBlocks().then((res) => {
             const data = GetData(res);
             const {ok, blocks, errors} = data.allBlocks;
@@ -152,25 +113,7 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
             else throw errors;
         });
     }, []);
-    /*
-    const tempblock = {
-      id: 0,
-      name: "Test Block"
-    }
-    const tempblock2 = {
-      id: 1,
-      name: "Test Block 2"
-    }
-    //setBlocks([tempblock])
-    blocks = [tempblock, tempblock2];
-    const tempdiagram = {
-      id: 0,
-      name: "Test Diagram"
-    }
-    //setDiagrams([tempdiagram]);
-    diagrams = [tempdiagram];
-    */
-
+    
     return (
         <div>
             <div style={{display: 'flex', alignItems: 'flex-end', width: '100%'}}>

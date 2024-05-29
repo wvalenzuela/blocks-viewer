@@ -10,26 +10,21 @@ import Line from './Line';
 import PolyLine from './PolyLine';
 
 
-const WHITE = [1, 1, 1];
-const GREEN = [0.1, 0.8, 0.1];
-const RED = [1.0,0,0];
-
 /**
-* <?>
-* createLine  
-* destroyLine - removes line from renderer and diagram
-* handleMouseMove 
-* handleMouseDown 
-* handleMouseUp 
-* processSelections - ?
-* handleConnect - ?
-* enablePan - adds the manipulators for panning with camera
-* disablePan - removes the manipulators for panning with camera
-* @param view ?
-* @param container ?
-* @param renderer ? 
-* @param diagram ?
-
+* <The Interactor class handles the user interaction with the viewer. Basic functions are
+* @method panning, zooming, dragging a block, adding and removing connections between ports>
+* @method createLine - creates a new line
+* @method destroyLine - removes line from renderer and diagram
+* @method handleMouseMove - handles mouse move event
+* @method handleMouseDown - handles mouse button click
+* @method handleMouseUp - handles mouse button release
+* @method handleConnect - handles the connection between two ports
+* @method enablePan - adds the manipulators for panning with camera
+* @method disablePan - removes the manipulators for panning with camera
+* @param view current view
+* @param container current container
+* @param renderer current renderer
+* @param diagram current diagram
  */
 class Interactor {
     constructor(view, container, renderer, diagram) {
@@ -67,10 +62,9 @@ class Interactor {
         //gets called everytime the mouse is moved but throtteled down to once every 20 ms
         this.interactor.onMouseMove((event) => {
             throttle(this.handleMouseMove(event), 20);
-            //this.handleMouseMove(event);
         }); 
       
-          //event listener for left mouse button press
+        //event listener for left mouse button press
         this.interactor.onLeftButtonPress((event) => {
             this.handleMouseDown(event);
         });
@@ -84,20 +78,15 @@ class Interactor {
 
     /**
      * <Create a line and set its relationships in the diagram>
-     * @param output ?
      */
-    createLine(output) {
+    createLine() {
         this.currentLine = new PolyLine(this.renderer, this.lastProcessedParent.color2);
         this.diagram.relation.set(this.currentLine.multiPrimitiveActor, this.currentLine)
         return this.currentLine;
     }
 
     /**
-     * <removes given line from renderer
-     * 
-     * and what else does it do?
-     * 
-     * >
+     * <removes given line from renderer and destroys the Line object>
      * @param line from class PolyLine
      */
     destroyLine(line) {
@@ -113,7 +102,7 @@ class Interactor {
     
     /**
      * <handles the mouse move event>
-     * @param event ?
+     * @param event mouse event
      */
     handleMouseMove(event) {
         //current position of the mouse inside the canvas, bottom right is 0,0 and top right is width,heigth
@@ -134,20 +123,12 @@ class Interactor {
             return;
         } else if (this.dragging == 'neutral') {
             return;
-        } /*else {
-            this.hardwareSelector.getSourceDataAsync(this.renderer,x,y,x,y).then((result) => {
-                if (result) {
-                    this.processSelections(result.generateSelection(x,y,x,y), x,y);
-                } else {
-                    this.processSelections(null);
-                }
-            });      
-        }*/
+        } 
     }
 
     /**
      * <handles the mouse down event>
-     * @param event ?
+     * @param event mouse event
      */
     handleMouseDown(event) {
         const x = event.position.x;
@@ -181,10 +162,9 @@ class Interactor {
                     } 
                     if (this.lastProcessedParent.connection.length === 0 || (this.lastProcessedParent.multi && !validSelectedLine)) {
                         this.lastProcessedParent.increase()
-                        this.createLine(this.renderer, this.lastProcessedActor);
+                        this.createLine();
                         return;
                     } else {
-                        //needs fixing for multiple connection
                         this.currentLine = validSelectedLine ? this.selectedLine : this.lastProcessedParent.connection[0]
                         this.lastProcessedActor = this.lastProcessedParent.type === "input" ? this.currentLine.outputPort.portActor : this.currentLine.inputPort.portActor;
                         this.lastProcessedParent = this.diagram.relation.get(this.lastProcessedActor);
@@ -210,7 +190,7 @@ class Interactor {
 
     /**
      * <handles the mouse up event>
-     * @param event ?
+     * @param event mouse event
      */
     handleMouseUp(event) {
         this.dragging = null;
@@ -242,56 +222,16 @@ class Interactor {
         }
     }
 
-    /**
-     * <?>
-     * @param selections ?
-     * @param x mouse position
-     * @param y mouse position
-     */
-    processSelections(selections, x, y) {
-        //resets the color of the last highlighted actor
-        if (this.lastPaintedActor) {
-           // this.lastPaintedActor.getProperty().setColor(this.lastPaintedActorColor);
-           this.diagram.relation.get(this.lastPaintedActor).hideOutline()
-
-        }
-        //if no actor is selected set lastProcessedActor 
-        if ((!selections || selections.length === 0) && !this.dragging) {
-            this.lastProcessedActor = null;
-            this.renderer.getRenderWindow().render()
-            return;
-        }
-        //get the prop from the hardwareSelector
-        const {
-            worldPosition: rayHitWorldPosition,
-            compositeID,
-            prop,
-            propID,
-            attributeID,
-        } = selections[0].getProperties();
-        //set lastProcessedActor
-        this.lastProcessedActor = prop;
-        //paint the selected actor green
-        if (this.lastPaintedActor !== prop) {
-            this.lastPaintedActorColor = prop.getProperty().getColor();
-        }
-        //prop.getProperty().setColor(...GREEN);
-        if (this.diagram.actors.get(prop) === 'block') {
-            this.diagram.relation.get(prop).showOutline()
-            this.lastPaintedActor = prop;
-        }
-        this.renderer.getRenderWindow().render()
-
-    }
 
     /**
-     * <?>
-     * @param prop ?
+     * <connects two ports with a line>
+     * @param prop second port we are trying to connect with the starting-port
      */
     handleConnect(prop){
         if (this.diagram.actors.get(prop) === 'port') {
             const propParent = this.diagram.relation.get(prop);
-            if (propParent.type === this.lastProcessedParent.type || propParent.block === this.lastProcessedParent.block) {
+            console.log(propParent.name, this.lastProcessedParent.name)
+            if (propParent.type === this.lastProcessedParent.type || propParent.block === this.lastProcessedParent.block || propParent.name !== this.lastProcessedParent.name) {
                 this.destroyLine(this.currentLine);
             } else {
                 //handle connection
@@ -337,7 +277,6 @@ class Interactor {
         this.interactorStyle.resetCurrentManipulator()
         this.interactorStyle.addMouseManipulator(this.zoomManipulator);
     }
-   
 }
 
 export default Interactor;

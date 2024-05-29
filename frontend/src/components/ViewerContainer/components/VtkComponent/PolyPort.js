@@ -8,20 +8,20 @@ import vtkPolyData from '@kitware/vtk.js/Common/DataModel/PolyData';
 
 /**
  * <The ports are used with the blocks such that blocks can be connected >
- * claculatePoints - Calculate the points of a inner, middle and outer circle
- * createCellArray - Creats 3 different cells for the 3 shapes: 2 annuli and a circle
- * createPort puts all the spahes into one Port
- * increase - increase the size of the port
- * decrease - decrease the size of the port
+ * @method claculatePoints - Calculate the points of a inner, middle and outer circle
+ * @method createCellArray - Creats 3 different cells for the 3 shapes: 2 annuli and a circle
+ * @method createPort puts all the spahes into one Port
+ * @method increase - increase the size of the port
+ * @method decrease - decrease the size of the port
  * @param x center of the port 
  * @param y center of the port 
  * @param type sting, int, boolean etc
  * @param block the block the port belongs to
- * @param id ?
- * @param bpid BlockPortID
+ * @param id id in the port-database
+ * @param bpid id in the blockport-database
  * @param color color of the port
  * @param name name of the port
- * @param multi ?
+ * @param multi multiple connections allowed or not
  * @returns {Port}
  */
 class Port {
