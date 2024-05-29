@@ -1,4 +1,3 @@
-import Block from './Block';
 import PolyLine from './PolyLine'
 import StyledBlock from './StyledBlock';
 

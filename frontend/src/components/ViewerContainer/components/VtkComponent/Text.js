@@ -1,15 +1,8 @@
-import vtkActor           from '@kitware/vtk.js/Rendering/Core/Actor';
-import vtkMapper          from '@kitware/vtk.js/Rendering/Core/Mapper';
+import vtkActor from '@kitware/vtk.js/Rendering/Core/Actor';
+import vtkMapper from '@kitware/vtk.js/Rendering/Core/Mapper';
 import vtkPolydata from "@kitware/vtk.js/Common/DataModel/PolyData";
-import vtkPoints from '@kitware/vtk.js/Common/Core/Points';
-import vtkPixelSpaceCallbackMapper from '@kitware/vtk.js/Rendering/Core/PixelSpaceCallbackMapper';
 import vtkDataArray from '@kitware/vtk.js/Common/Core/DataArray'
 import vtkCellArray from '@kitware/vtk.js/Common/Core/CellArray';
-import vtkQuad from '@kitware/vtk.js/Common/DataModel/Quad';
-import vtkCell from '@kitware/vtk.js/Common/DataModel/Cell';
-import vtkColorTransferFunction from '@kitware/vtk.js/Rendering/Core/ColorTransferFunction';
-import vtkVolumeProperty from '@kitware/vtk.js/Rendering/Core/VolumeProperty';
-
 
 /**
  * <Creates a text as polydata. Renders the text on a canvas and gets the imagedata of the pixels.

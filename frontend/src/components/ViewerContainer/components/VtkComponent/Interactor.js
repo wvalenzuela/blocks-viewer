@@ -6,7 +6,6 @@ import vtkGestureCameraManipulator from '@kitware/vtk.js/Interaction/Manipulator
 import { throttle } from '@kitware/vtk.js/macros';
 import { FieldAssociations } from '@kitware/vtk.js/Common/DataModel/DataSet/Constants';
 import vtkPicker from '@kitware/vtk.js/Rendering/Core/Picker';
-import Line from './Line';
 import PolyLine from './PolyLine';
 
 
