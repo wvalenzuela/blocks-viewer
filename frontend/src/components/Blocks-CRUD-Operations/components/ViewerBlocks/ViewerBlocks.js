@@ -385,6 +385,7 @@ class ViewerBlocks extends React.Component {
                         loading={loading}
                         loadingPosition='end'
                         variant='contained'
+                        style={{backgroundColor: 'green'}}
                     >
                         RegisterBlocks
                     </LoadingButton>
