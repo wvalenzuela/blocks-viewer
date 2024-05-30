@@ -72,7 +72,6 @@ class Interactor {
         this.interactor.onLeftButtonRelease((event) => {
             this.handleMouseUp(event);
         });
-
     }
 
     /**
@@ -220,7 +219,6 @@ class Interactor {
             });
         }
     }
-
 
     /**
      * <connects two ports with a line>

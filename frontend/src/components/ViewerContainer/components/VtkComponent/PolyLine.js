@@ -21,9 +21,9 @@ class PolyLine{
         this.multiPrimitiveMapper = vtkMapper.newInstance();
         this.multiPrimitiveActor = vtkActor.newInstance();
         this.multiPrimitiveActor.getProperty().setColor(...this.color);
+        this.multiPrimitiveActor.getProperty().setLineWidth(3);//width of the line
         this.multiPrimitiveMapper.setInputData(this.multiPrimitiveData);
         this.multiPrimitiveActor.setMapper(this.multiPrimitiveMapper);
-        //this.multiPrimitiveActor.setPickable(false);
         this.renderer.addActor(this.multiPrimitiveActor);
     }
 
@@ -35,7 +35,6 @@ class PolyLine{
     drawLine(start, end){
         this.start = start;
         this.end = end;
-        const blockLineThickness = 0.05;
         const p1 = start;
         const temp = (start[0]+end[0])/2
         const p2 = [temp,start[1]];

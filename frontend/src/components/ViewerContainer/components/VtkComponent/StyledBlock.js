@@ -125,22 +125,22 @@ class StyledBlock {
     const dividerThickness = 0.02;
 
     const cornerPoints = [
-      { x: x, y: y }, // unten links
-      { x: x + length, y: y }, //unten rechts
-      { x: x + length, y: y + width }, //obern rechts
-      { x: x, y: y + width }, // oben links
+      { x: x, y: y }, // bottom left
+      { x: x + length, y: y }, //bottom right
+      { x: x + length, y: y + width }, //top right
+      { x: x, y: y + width }, // bottom left
     ];
     const cornerPointsShadow = [
-        { x: x-shadowThickness, y: y-shadowThickness }, // unten links
-        { x: x + length+shadowThickness, y: y-shadowThickness }, //unten rechts
-        { x: x + length+shadowThickness, y: y + width }, //obern rechts
-        { x: x-shadowThickness, y: y + width }, // oben links
+        { x: x-shadowThickness, y: y-shadowThickness }, // bottom left
+        { x: x + length+shadowThickness, y: y-shadowThickness }, //bottom right
+        { x: x + length+shadowThickness, y: y + width }, //top right
+        { x: x-shadowThickness, y: y + width }, // top left
       ];
       const cornerPointsOutline = [
-        { x: x+outlineThickness, y: y+outlineThickness }, // unten links
-        { x: x + length-outlineThickness, y: y+outlineThickness }, //unten rechts
-        { x: x + length-outlineThickness, y: y + width-outlineThickness }, //obern rechts
-        { x: x+outlineThickness, y: y + width-outlineThickness }, // oben links
+        { x: x+outlineThickness, y: y+outlineThickness }, // bottom left
+        { x: x + length-outlineThickness, y: y+outlineThickness }, //bottom right
+        { x: x + length-outlineThickness, y: y + width-outlineThickness }, //top right
+        { x: x+outlineThickness, y: y + width-outlineThickness }, // top left
       ];
     const cornerRadius = 0.2;
     const points = [];

@@ -112,7 +112,6 @@ class Diagram{
         return this;
     }
 
-
     /**
      * <renders the scene. removes the grid actor, resets the camera and then adds the grid actor back>
      */
