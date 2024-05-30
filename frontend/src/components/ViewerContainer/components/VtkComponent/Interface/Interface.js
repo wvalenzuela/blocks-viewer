@@ -113,19 +113,19 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
             else throw errors;
         });
     }, []);
-    
+
     return (
         <div>
             <div style={{display: 'flex', alignItems: 'flex-end', width: '100%'}}>
                 <Button sx={{mr: 1}} variant='contained' onClick={handleButtonBlock}>ADD BLOCK</Button>
-                <FormControl sx={{mr: 1}}>
+                <FormControl sx={{mr: 1}} style={{}}>
                     <InputLabel id="dropdown-blocks">Select a Block</InputLabel>
                     <Select
                         labelId="dropdown-blocks"
                         id="dropdown-select-blocks"
                         value={selectedBlock ? selectedBlock.id : ''}
                         onChange={handleChangeBlock}
-                        style={{minWidth: "200px"}}
+                        style={{minWidth: "175px"}}
                     >
                         {blocks.map((block, index) => (
                             <MenuItem key={index} value={block.id}>
@@ -142,7 +142,7 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
                         id="dropdown-select-diagrams"
                         value={selectedDiagram ? selectedDiagram.id : ''}
                         onChange={handleChangeDiagram}
-                        style={{minWidth: "200px"}}
+                        style={{minWidth: "175px"}}
                     >
                         {diagrams.map((diagram, index) => (
                             <MenuItem key={index} value={diagram.id}>
@@ -151,7 +151,7 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
                         ))}
                     </Select>
                 </FormControl>
-                <Button sx={{mr: 1}} variant='contained' onClick={handleButtonSaveDiagram}>SAVE DIAGRAM</Button>
+                <Button sx={{mr: 1}} style={{marginLeft:'10px', backgroundColor:'green'}} variant='contained' onClick={handleButtonSaveDiagram}>SAVE DIAGRAM</Button>
 
                 <TextField
                     name='diagramName'
@@ -159,7 +159,7 @@ export default function Interface({addBlock, loadDiagram, saveDiagram, handleCle
                     variant='standard'
                     onChange={handleDiagramNameChange}
                 />
-                <Button sx={{mr: 1}} variant='contained' onClick={handleButtonClear}>CLEAR</Button>
+                <Button sx={{mr: 1}} style={{marginLeft:'10px', backgroundColor:'red'}} variant='contained' onClick={handleButtonClear}>CLEAR</Button>
 
             </div>
         </div>
