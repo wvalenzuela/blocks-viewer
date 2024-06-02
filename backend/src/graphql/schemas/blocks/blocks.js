@@ -2,14 +2,17 @@ import { gql } from 'graphql-tag';
 
 const TYPEDEFS = gql`
     type Block {
-        id: LongLong!
-        blockName: String
+        id: ID!
+        name: String!
+        color: String!
         createdAt: String!
         updatedAt: String!
+        ports: [BlockPort!]!
     }
     input InputBlock {
         id: LongLong
-        blockName: String
+        name: String
+        color: String
         createdAt: String
         updatedAt: String
     }
@@ -27,19 +30,44 @@ const TYPEDEFS = gql`
     # ---------------------------- QUERY ---------------------------
     type Query {
         allBlocks(
-            blockName: String
+            name: String
             page: Int
             limit: Int
         ): BlocksResponse! @auth
     }
+    type Query {
+        fullBlock(
+            name: String
+            page: Int
+            limit: Int
+            id: Int!
+        ): BlocksResponse! @auth
+    }
+    type Query {
+        block(id: ID!): Block
+    }
+    type Mutation {
+        createBlock(input: CreateBlockInput!): Block
+    }
+    input CreateBlockInput {
+        name: String!
+        color: String!
+        ports: [PortInput]
+    }
+    input PortInput {
+        portId: ID!
+        type: String!
+        multi: Boolean!
+        position: Int!
+    }
     input RegisterBlock {
-        blockName: String!
+        name: String!
+        color: String!
     }
     input InputBlockDetails {
-        id: LongLong
-        blockName: String
-        inputs: Int
-        outputs: Int
+        portId: LongLong
+        name: String
+        color: String
     }
     # ------------------------- MUTATION ---------------------------
     type Mutation {

@@ -6,7 +6,7 @@ import { Box, CircularProgress, Grid } from '@mui/material';
 import { TableUsers, ViewerUsers } from './components';
 import VtkComponent from './components/VtkComponent/vtkComponent';
 
-class ViewerContainer extends React.Component {
+class ViewerContainer extends React.Component { 
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +54,7 @@ class ViewerContainer extends React.Component {
     return (
       <React.Fragment>
         <Box sx={{ display: 'flex', width: 800, height: 400 }}>
-          <VtkComponent />
+          <VtkComponent/>
         </Box>
         {/*<Grid container spacing={1}>
           <Grid item>

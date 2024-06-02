@@ -53,11 +53,6 @@ const ToolBar = ({ open, toggleDrawer }) => {
         >
           Blocks
         </Typography>
-        <IconButton color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
       </Toolbar>
     </MainBar>
   );

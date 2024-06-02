@@ -39,7 +39,7 @@ export default function App() {
             <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
                 <Routes>
                     <Route path='/viewer' element={<ViewerContainer/>}/>
-                    <Route  path='/blocks-CRUD' element={<BlocksCRUDOperations/>}/>
+                    <Route  path='/create-Block' element={<BlocksCRUDOperations/>}/>
                 </Routes>
             </Container>
           </Box>

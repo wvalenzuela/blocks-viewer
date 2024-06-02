@@ -196,6 +196,10 @@ export default function EnhancedTable({ rows }) {
     setOrderBy(property);
   };
 
+  const handleReload = () => {
+    console.log("Reloaded");
+  }
+
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
@@ -255,7 +259,7 @@ export default function EnhancedTable({ rows }) {
   return (
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} handleReload={handleReload}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

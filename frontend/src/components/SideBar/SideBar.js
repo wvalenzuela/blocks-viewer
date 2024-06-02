@@ -67,11 +67,11 @@ const SideBar = ({open, toggleDrawer}) => {
                     </ListItemIcon>
                     <ListItemText primary='Viewer' />
                 </ListItemButton>
-                <ListItemButton onClick={() => navigate('/blocks-CRUD')}>
+                <ListItemButton onClick={() => navigate('/create-Block')}>
                     <ListItemIcon>
                         <ViewInArIcon/>
                     </ListItemIcon>
-                    <ListItemText primary='Blocks CRUD'/>
+                    <ListItemText primary='Creat Blocks'/>
                 </ListItemButton>
             </List>
         </Drawer>

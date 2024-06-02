@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { GetData, QueryBlocks, ServerErrorsString } from '../../common';
+import { GetData, QueryBlocks, ServerErrorsString, QueryPorts } from '../../common';
 import SnackMessage from '../SnackMessage';
 import { Box, CircularProgress, Grid } from '@mui/material';
 import { TabelBlocks, ViewerBlocks } from './components';
+
 class BlocksCRUDOperations extends React.Component {
     constructor(props) {
         super(props);
@@ -25,8 +26,8 @@ class BlocksCRUDOperations extends React.Component {
             QueryBlocks()
                 .then((res) => {
                     const data = GetData(res);
-                    const { ok, users, errors } = data.allBlocks;
-                    if (ok) this.setState({ loading: false, users });
+                    const { ok, blocks, errors } = data.allBlocks;
+                    if (ok) this.setState({ loading: false, blocks });
                     else throw errors;
                 })
                 .catch((error) => {
@@ -56,6 +57,7 @@ class BlocksCRUDOperations extends React.Component {
                         <ViewerBlocks
                             holder={this.holder}
                             setState={(state) => this.setState(state)}
+                            handleReload={this.handleUsers}
                         />
                     </Grid>
                     {Component}
